@@ -28,10 +28,10 @@ namespace PgpSharp
             {
                 var folder = GetDefaultGpgInstallFolder();
 
-                exe = Path.Combine(folder, "gpg.exe");
+                exe = Path.Combine(folder, "gpg2.exe");
                 if (!File.Exists(exe))
                 {
-                    exe = Path.Combine(folder, "gpg2.exe");
+                    exe = Path.Combine(folder, "gpg.exe");
                     if (!File.Exists(exe))
                     {
                         return null;

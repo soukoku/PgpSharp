@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="GpgConfig.cs" />
     <Compile Include="GpgTool.cs" />
+    <Compile Include="IOUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Text;
 
 namespace PgpSharp
@@ -44,6 +45,14 @@ namespace PgpSharp
         public bool Armorize { get; set; }
 
         /// <summary>
+        /// Gets or sets the passphrase if the operation. Required to sign and decrypt.
+        /// </summary>
+        /// <value>
+        /// The passphrase.
+        /// </value>
+        public SecureString Passphrase { get; set; }
+
+        /// <summary>
         /// Verifies this input for requirements.
         /// </summary>
         /// <exception cref="PgpSharp.PgpException"></exception>
@@ -53,19 +62,30 @@ namespace PgpSharp
             {
                 case Operation.Decrypt:
                     RequireRecipient();
+                    RequirePasspharse();
                     break;
                 case Operation.Encrypt:
                     RequireRecipient();
                     break;
                 case Operation.Sign:
                     RequireOriginator();
+                    RequirePasspharse();
                     break;
                 case Operation.SignAndEncrypt:
                     RequireOriginator();
                     RequireRecipient();
+                    RequirePasspharse();
                     break;
                 default:
                     throw new PgpException(string.Format("Unknown operation {0}.", Operation));
+            }
+        }
+
+        private void RequirePasspharse()
+        {
+            if (Passphrase == null || Passphrase.Length == 0)
+            {
+                throw new PgpException(string.Format("Passphrase is required for {0} operation.", Operation));
             }
         }
 
