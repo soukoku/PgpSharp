@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PgpSharp", "PgpSharp\PgpSharp.csproj", "{3BC39B3D-B478-41C8-865D-72DBC39143A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PgpSharp.GnuPG", "PgpSharp.GnuPG\PgpSharp.GnuPG.csproj", "{327D82F6-0A72-4CBA-861B-76A341E76E8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PgpSharp.BouncyCastle", "PgpSharp.BouncyCastle\PgpSharp.BouncyCastle.csproj", "{1159B223-AE94-46E0-9EDA-0DD8A67D867B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{1B50709C-0841-4460-A2AE-BFE03FB8E596}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.txt = LICENSE.txt
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3BC39B3D-B478-41C8-865D-72DBC39143A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BC39B3D-B478-41C8-865D-72DBC39143A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BC39B3D-B478-41C8-865D-72DBC39143A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BC39B3D-B478-41C8-865D-72DBC39143A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{327D82F6-0A72-4CBA-861B-76A341E76E8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{327D82F6-0A72-4CBA-861B-76A341E76E8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{327D82F6-0A72-4CBA-861B-76A341E76E8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{327D82F6-0A72-4CBA-861B-76A341E76E8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1159B223-AE94-46E0-9EDA-0DD8A67D867B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1159B223-AE94-46E0-9EDA-0DD8A67D867B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1159B223-AE94-46E0-9EDA-0DD8A67D867B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1159B223-AE94-46E0-9EDA-0DD8A67D867B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
