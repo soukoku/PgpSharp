@@ -31,6 +31,12 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\PgpSharp.BouncyCastle.XML</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Sign.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
@@ -51,6 +57,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="PgpSharp.BouncyCastle.nuspec" />
+    <None Include="Sign.snk" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PgpSharp\PgpSharp.csproj">
