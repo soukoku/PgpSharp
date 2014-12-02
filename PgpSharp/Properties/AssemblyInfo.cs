@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("PgpSharp")]
-[assembly: AssemblyDescription("Defines generic pgp operations for dotnet without implementations.")]
+[assembly: AssemblyDescription("Defines basic pgp operations for dotnet without implementations.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("PgpSharp")]
 [assembly: AssemblyTrademark("")]

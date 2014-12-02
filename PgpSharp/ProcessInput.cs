@@ -36,6 +36,14 @@ namespace PgpSharp
         public string Recipient { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating the output should be ASCII armored.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> to armorize; otherwise, <c>false</c>.
+        /// </value>
+        public bool Armorize { get; set; }
+
+        /// <summary>
         /// Verifies this input for requirements.
         /// </summary>
         /// <exception cref="PgpSharp.PgpException"></exception>
