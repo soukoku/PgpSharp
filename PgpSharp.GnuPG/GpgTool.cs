@@ -36,7 +36,7 @@ namespace PgpSharp
             {
                 if (proc.Start())
                 {
-                    IOUtility.PushPassphrase(proc.StandardInput, input.Passphrase);
+                    IOUtility.PushSecret(proc.StandardInput, input.Passphrase);
                     proc.WaitForExit();
                 }
             }
@@ -56,7 +56,10 @@ namespace PgpSharp
             {
                 if (proc.Start())
                 {
-                    IOUtility.PushPassphrase(proc.StandardInput, input.Passphrase);
+                    if (input.NeedsPassphrase)
+                    {
+                        IOUtility.PushSecret(proc.StandardInput, input.Passphrase);
+                    }
                     proc.WaitForExit();
                 }
             }
@@ -65,12 +68,11 @@ namespace PgpSharp
 
         static Process CreateProcess(ProcessInput input)
         {
-            StringBuilder args = new StringBuilder("--yes ");
+            StringBuilder args = new StringBuilder("--yes --batch ");
             if (input.Armorize)
             {
                 args.Append("-a ");
             }
-            // todo: test args
             switch (input.Operation)
             {
                 case Operation.Decrypt:
@@ -90,17 +92,23 @@ namespace PgpSharp
                     break;
             }
 
+            if (input.NeedsPassphrase)
+            {
+                args.Append("--passphrase-fd 0 ");
+            }
+
             var fileInput = input as FileProcessInput;
             if (fileInput != null)
             {
                 args.AppendFormat("-o \"{0}\" \"{1}\"", fileInput.OutputFile, fileInput.InputFile);
             }
 
+            Debug.WriteLine("gpg args: " + args.ToString());
 
             Process p = new Process();
             p.StartInfo.FileName = GpgConfig.GpgExePath;
             p.StartInfo.Arguments = args.ToString();
-            p.StartInfo.UseShellExecute = true;
+            p.StartInfo.UseShellExecute = false;
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.RedirectStandardInput = true;
 

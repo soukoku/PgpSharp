@@ -53,6 +53,27 @@ namespace PgpSharp
         public SecureString Passphrase { get; set; }
 
         /// <summary>
+        /// Gets a value indicating whether a passphrase is required for the specified <see cref="Operation"/>.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if passphrase is needed; otherwise, <c>false</c>.
+        /// </value>
+        public bool NeedsPassphrase
+        {
+            get
+            {
+                switch (Operation)
+                {
+                    case PgpSharp.Operation.Decrypt:
+                    case PgpSharp.Operation.SignAndEncrypt:
+                    case PgpSharp.Operation.Sign:
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Verifies this input for requirements.
         /// </summary>
         /// <exception cref="PgpSharp.PgpException"></exception>

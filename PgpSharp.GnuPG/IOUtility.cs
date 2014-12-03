@@ -11,15 +11,16 @@ namespace PgpSharp
     static class IOUtility
     {
         /// <summary>
-        /// Pushes the passphrase char-by-char to the input.
+        /// Pushes the <see cref="SecureString"/> char-by-char to the specified input
+        /// and add a new-line at end to simulate enter key.
         /// </summary>
         /// <param name="input">The input.</param>
-        /// <param name="passphrase">The passphrase.</param>
-        public static void PushPassphrase(StreamWriter input, SecureString passphrase)
+        /// <param name="secret">The secret.</param>
+        public static void PushSecret(TextWriter input, SecureString secret)
         {
-            if (passphrase != null && passphrase.Length > 0)
+            if (input != null && secret != null && secret.Length > 0)
             {
-                IntPtr ptr = Marshal.SecureStringToBSTR(passphrase);
+                IntPtr ptr = Marshal.SecureStringToBSTR(secret);
                 try
                 {
                     int offset = 0;
