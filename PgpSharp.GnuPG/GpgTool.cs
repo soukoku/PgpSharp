@@ -17,25 +17,28 @@ namespace PgpSharp
         #region IPgpTool Members
 
         /// <summary>
-        /// Processes the stream input.
+        /// Processes data with stream input.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns>
         /// Output stream.
         /// </returns>
         /// <exception cref="System.NotSupportedException"></exception>
-        public Stream Process(StreamProcessInput input)
+        public Stream ProcessData(StreamDataInput input)
         {
             throw new NotSupportedException();
+
+            // only way to reliably make this work is save to file and process it instead?
+
         }
 
         /// <summary>
-        /// Processes the file input.
+        /// Processes data with file input.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <exception cref="System.ArgumentNullException">input</exception>
         /// <exception cref="PgpException"></exception>
-        public void Process(FileProcessInput input)
+        public void ProcessData(FileDataInput input)
         {
             if (input == null) { throw new ArgumentNullException("input"); }
             input.Verify();
@@ -63,7 +66,7 @@ namespace PgpSharp
         }
 
 
-        static string CreateCommandLineArgs(ProcessInput input)
+        static string CreateCommandLineArgs(DataInput input)
         {
             StringBuilder args = new StringBuilder("--yes --batch ");
             if (input.Armorize)
@@ -72,19 +75,19 @@ namespace PgpSharp
             }
             switch (input.Operation)
             {
-                case Operation.Decrypt:
+                case DataOperation.Decrypt:
                     args.AppendFormat("-d -u \"{0}\" ", input.Recipient);
                     break;
-                case Operation.Encrypt:
+                case DataOperation.Encrypt:
                     args.AppendFormat("-e -r \"{0}\" ", input.Recipient);
                     break;
-                case Operation.Sign:
+                case DataOperation.Sign:
                     args.AppendFormat("-s -u \"{0}\" ", input.Originator);
                     break;
-                case Operation.SignAndEncrypt:
+                case DataOperation.SignAndEncrypt:
                     args.AppendFormat("-s -e -r \"{0}\" -u \"{1}\" ", input.Recipient, input.Originator);
                     break;
-                case Operation.Verify:
+                case DataOperation.Verify:
                     args.Append("--verify ");
                     break;
             }
@@ -94,7 +97,7 @@ namespace PgpSharp
                 args.Append("--passphrase-fd 0 ");
             }
 
-            var fileInput = input as FileProcessInput;
+            var fileInput = input as FileDataInput;
             if (fileInput != null)
             {
                 args.AppendFormat("-o \"{0}\" \"{1}\"", fileInput.OutputFile, fileInput.InputFile);

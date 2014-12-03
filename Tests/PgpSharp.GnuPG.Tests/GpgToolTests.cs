@@ -46,36 +46,37 @@ namespace PgpSharp.GnuPG
             string decryptedFile = Path.Combine(__samplesFolder, "OriginalText_Decrypted.txt");
             Util.CleanFiles(encryptedFile, decryptedFile);
 
-            var encryptArg = new FileProcessInput
+            var encryptArg = new FileDataInput
             {
                 Armorize = true,
                 InputFile = origFile,
                 OutputFile = encryptedFile,
-                Operation = Operation.Encrypt,
+                Operation = DataOperation.Encrypt,
                 Recipient = TESTER_NAME,
             };
 
             GpgTool tool = new GpgTool();
-            tool.Process(encryptArg);
+            tool.ProcessData(encryptArg);
 
             Assert.IsTrue(File.Exists(encryptedFile), "Encrypted file not found.");
 
 
-            var decryptArg = new FileProcessInput
+            var decryptArg = new FileDataInput
             {
                 InputFile = encryptedFile,
                 OutputFile = decryptedFile,
-                Operation = Operation.Decrypt,
+                Operation = DataOperation.Decrypt,
                 Recipient = TESTER_NAME,
                 Passphrase = __passphrase
             };
-            tool.Process(decryptArg);
+            tool.ProcessData(decryptArg);
 
             Assert.IsTrue(File.Exists(decryptedFile), "Decrypted file not found.");
 
             string origText = File.ReadAllText(origFile);
             string finalText = File.ReadAllText(decryptedFile);
             Assert.AreEqual(origText, finalText, "Roundtrip got diffent file.");
+            Util.CleanFiles(encryptedFile, decryptedFile);
         }
 
         [TestMethod]
@@ -86,36 +87,37 @@ namespace PgpSharp.GnuPG
             string decryptedFile = Path.Combine(__samplesFolder, "OriginalBinary_Decrypted.png");
             Util.CleanFiles(encryptedFile, decryptedFile);
 
-            var encryptArg = new FileProcessInput
+            var encryptArg = new FileDataInput
             {
                 Armorize = true,
                 InputFile = origFile,
                 OutputFile = encryptedFile,
-                Operation = Operation.Encrypt,
+                Operation = DataOperation.Encrypt,
                 Recipient = TESTER_NAME,
             };
 
             GpgTool tool = new GpgTool();
-            tool.Process(encryptArg);
+            tool.ProcessData(encryptArg);
 
             Assert.IsTrue(File.Exists(encryptedFile), "Encrypted file not found.");
 
 
-            var decryptArg = new FileProcessInput
+            var decryptArg = new FileDataInput
             {
                 InputFile = encryptedFile,
                 OutputFile = decryptedFile,
-                Operation = Operation.Decrypt,
+                Operation = DataOperation.Decrypt,
                 Recipient = TESTER_NAME,
                 Passphrase = __passphrase
             };
-            tool.Process(decryptArg);
+            tool.ProcessData(decryptArg);
 
             Assert.IsTrue(File.Exists(decryptedFile), "Decrypted file not found.");
 
             byte[] origBytes = File.ReadAllBytes(origFile);
             byte[] finalBytes = File.ReadAllBytes(decryptedFile);
             CollectionAssert.AreEqual(origBytes, finalBytes, "Roundtrip got diffent file.");
+            Util.CleanFiles(encryptedFile, decryptedFile);
         }
     }
 }

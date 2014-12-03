@@ -55,6 +55,7 @@
     <Compile Include="IOUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedirectedProcess.cs" />
+    <Compile Include="TempFileStream.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PgpSharp\PgpSharp.csproj">

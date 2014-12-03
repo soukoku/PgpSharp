@@ -12,16 +12,16 @@ namespace PgpSharp
     public interface IPgpTool
     {
         /// <summary>
-        /// Processes the stream input.
+        /// Processes data with stream input.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns>Output stream.</returns>
-        Stream Process(StreamProcessInput input);
+        Stream ProcessData(StreamDataInput input);
 
         /// <summary>
-        /// Processes the file input.
+        /// Processes data with file input.
         /// </summary>
         /// <param name="input">The input.</param>
-        void Process(FileProcessInput input);
+        void ProcessData(FileDataInput input);
     }
 }

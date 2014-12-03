@@ -8,9 +8,9 @@ using System.Text;
 namespace PgpSharp
 {
     /// <summary>
-    /// Base input object for IO processing.
+    /// Base input object for data processing.
     /// </summary>
-    public abstract class ProcessInput
+    public abstract class DataInput
     {
         /// <summary>
         /// Gets or sets the operation.
@@ -18,7 +18,7 @@ namespace PgpSharp
         /// <value>
         /// The operation.
         /// </value>
-        public Operation Operation { get; set; }
+        public DataOperation Operation { get; set; }
 
         /// <summary>
         /// Gets or sets the originator. Required to sign.
@@ -64,9 +64,9 @@ namespace PgpSharp
             {
                 switch (Operation)
                 {
-                    case PgpSharp.Operation.Decrypt:
-                    case PgpSharp.Operation.SignAndEncrypt:
-                    case PgpSharp.Operation.Sign:
+                    case PgpSharp.DataOperation.Decrypt:
+                    case PgpSharp.DataOperation.SignAndEncrypt:
+                    case PgpSharp.DataOperation.Sign:
                         return true;
                 }
                 return false;
@@ -81,18 +81,18 @@ namespace PgpSharp
         {
             switch (Operation)
             {
-                case Operation.Decrypt:
+                case DataOperation.Decrypt:
                     RequireRecipient();
                     RequirePasspharse();
                     break;
-                case Operation.Encrypt:
+                case DataOperation.Encrypt:
                     RequireRecipient();
                     break;
-                case Operation.Sign:
+                case DataOperation.Sign:
                     RequireOriginator();
                     RequirePasspharse();
                     break;
-                case Operation.SignAndEncrypt:
+                case DataOperation.SignAndEncrypt:
                     RequireOriginator();
                     RequireRecipient();
                     RequirePasspharse();
@@ -130,7 +130,7 @@ namespace PgpSharp
     /// <summary>
     /// Input object for processing a stream.
     /// </summary>
-    public class StreamProcessInput : ProcessInput
+    public class StreamDataInput : DataInput
     {
         /// <summary>
         /// Gets or sets the input data stream.
@@ -158,7 +158,7 @@ namespace PgpSharp
     /// <summary>
     /// Input object for processing a file.
     /// </summary>
-    public class FileProcessInput : ProcessInput
+    public class FileDataInput : DataInput
     {
         /// <summary>
         /// Gets or sets the input file path.

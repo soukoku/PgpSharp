@@ -6,9 +6,9 @@ using System.Text;
 namespace PgpSharp
 {
     /// <summary>
-    /// Defines the supported IO operations.
+    /// Defines the supported data operations.
     /// </summary>
-    public enum Operation
+    public enum DataOperation
     {
         Sign,
         Verify,
