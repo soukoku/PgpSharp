@@ -119,5 +119,87 @@ namespace PgpSharp.GnuPG
             CollectionAssert.AreEqual(origBytes, finalBytes, "Roundtrip got diffent file.");
             Util.CleanFiles(encryptedFile, decryptedFile);
         }
+
+
+
+
+
+        [TestMethod]
+        public void Can_Encrypt_And_Decrypt_Text_Stream()
+        {
+            string origFile = Path.Combine(__samplesFolder, "OriginalText.txt");
+            using (var origFs = File.OpenRead(origFile))
+            {
+                var encryptArg = new StreamDataInput
+                {
+                    Armorize = true,
+                    InputData = origFs,
+                    Operation = DataOperation.Encrypt,
+                    Recipient = TESTER_NAME,
+                };
+
+                GpgTool tool = new GpgTool();
+
+                using (var encryptStream = tool.ProcessData(encryptArg))
+                {
+                    var decryptArg = new StreamDataInput
+                    {
+                        InputData = encryptStream,
+                        Operation = DataOperation.Decrypt,
+                        Recipient = TESTER_NAME,
+                        Passphrase = __passphrase
+                    };
+                    using (var decryptedStream = tool.ProcessData(decryptArg))
+                    using (StreamReader reader = new StreamReader(decryptedStream))
+                    {
+                        string origText = File.ReadAllText(origFile);
+                        string finalText = reader.ReadToEnd();
+                        Assert.AreEqual(origText, finalText, "Roundtrip got diffent text.");
+                    }
+
+                }
+
+            }
+        }
+
+        [TestMethod]
+        public void Can_Encrypt_And_Decrypt_Binary_Stream()
+        {
+            string origFile = Path.Combine(__samplesFolder, "OriginalBinary.png");
+            using (var origFs = File.OpenRead(origFile))
+            {
+                var encryptArg = new StreamDataInput
+                {
+                    Armorize = true,
+                    InputData = origFs,
+                    Operation = DataOperation.Encrypt,
+                    Recipient = TESTER_NAME,
+                };
+
+                GpgTool tool = new GpgTool();
+
+                using (var encryptStream = tool.ProcessData(encryptArg))
+                {
+                    var decryptArg = new StreamDataInput
+                    {
+                        InputData = encryptStream,
+                        Operation = DataOperation.Decrypt,
+                        Recipient = TESTER_NAME,
+                        Passphrase = __passphrase
+                    };
+                    using (var decryptedStream = tool.ProcessData(decryptArg))
+                    using (MemoryStream testStream = new MemoryStream())
+                    {
+                        IOUtility.CopyStream(decryptedStream, testStream, 4096);
+
+                        byte[] origBytes = File.ReadAllBytes(origFile);
+                        byte[] finalBytes = testStream.ToArray();
+                        CollectionAssert.AreEqual(origBytes, finalBytes, "Roundtrip got diffent bytes.");
+                    }
+
+                }
+
+            }
+        }
     }
 }

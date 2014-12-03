@@ -23,13 +23,44 @@ namespace PgpSharp
         /// <returns>
         /// Output stream.
         /// </returns>
-        /// <exception cref="System.NotSupportedException"></exception>
+        /// <exception cref="System.ArgumentNullException">input</exception>
+        /// <exception cref="PgpException"></exception>
         public Stream ProcessData(StreamDataInput input)
         {
-            throw new NotSupportedException();
+            if (input == null) { throw new ArgumentNullException("input"); }
+            input.Verify();
 
-            // only way to reliably make this work is save to file and process it instead?
-
+            // only way to reliably make this work is save to file and process it instead.
+            var tempInFile = Path.GetTempFileName();
+            var tempOutFile = Path.GetTempFileName();
+            try
+            {
+                using (var fs = File.OpenWrite(tempInFile))
+                {
+                    IOUtility.CopyStream(input.InputData, fs, 4096);
+                }
+                var newArg = new FileDataInput
+                {
+                    Armorize = input.Armorize,
+                    InputFile = tempInFile,
+                    Operation = input.Operation,
+                    Originator = input.Originator,
+                    OutputFile = tempOutFile,
+                    Passphrase = input.Passphrase,
+                    Recipient = input.Recipient
+                };
+                ProcessData(newArg);
+                return new TempFileStream(tempOutFile);
+            }
+            catch
+            {
+                if (File.Exists(tempOutFile)) { File.Delete(tempOutFile); }
+                throw;
+            }
+            finally
+            {
+                if (File.Exists(tempInFile)) { File.Delete(tempInFile); }
+            }
         }
 
         /// <summary>

@@ -38,5 +38,15 @@ namespace PgpSharp
                 input.Flush();
             }
         }
+
+        public static void CopyStream(Stream input, Stream output, int bufferSize)
+        {
+            byte[] buff = new byte[bufferSize];
+            int read = 0;
+            while ((read = input.Read(buff, 0, buff.Length)) > 0)
+            {
+                output.Write(buff, 0, read);
+            }
+        }
     }
 }
