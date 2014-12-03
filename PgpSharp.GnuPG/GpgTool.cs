@@ -23,23 +23,10 @@ namespace PgpSharp
         /// <returns>
         /// Output stream.
         /// </returns>
-        /// <exception cref="System.ArgumentNullException">input</exception>
-        /// <exception cref="PgpException"></exception>
+        /// <exception cref="System.NotSupportedException"></exception>
         public Stream Process(StreamProcessInput input)
         {
-
-            throw new NotImplementedException();
-
-            if (input == null) { throw new ArgumentNullException("input"); }
-            input.Verify();
-            using (var proc = CreateProcess(input))
-            {
-                if (proc.Start())
-                {
-                    IOUtility.PushSecret(proc.StandardInput, input.Passphrase);
-                    proc.WaitForExit();
-                }
-            }
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -52,21 +39,31 @@ namespace PgpSharp
         {
             if (input == null) { throw new ArgumentNullException("input"); }
             input.Verify();
-            using (var proc = CreateProcess(input))
+            using (var proc = new RedirectedProcess(GpgConfig.GpgExePath, CreateCommandLineArgs(input)))
             {
                 if (proc.Start())
                 {
                     if (input.NeedsPassphrase)
                     {
-                        IOUtility.PushSecret(proc.StandardInput, input.Passphrase);
+                        proc.PushInput(input.Passphrase);
+                        proc.PushInput(Environment.NewLine);
                     }
                     proc.WaitForExit();
+
+                    Debug.WriteLine("gpg output: " + proc.Output);
+                    Debug.WriteLine("gpg exit code: " + proc.ExitCode);
+                    var error = proc.Error;
+                    if (!string.IsNullOrEmpty(error) && proc.ExitCode != 0)
+                    {
+                        Debug.WriteLine("gpg error: " + error);
+                        throw new PgpException(error);
+                    }
                 }
             }
         }
 
 
-        static Process CreateProcess(ProcessInput input)
+        static string CreateCommandLineArgs(ProcessInput input)
         {
             StringBuilder args = new StringBuilder("--yes --batch ");
             if (input.Armorize)
@@ -103,16 +100,10 @@ namespace PgpSharp
                 args.AppendFormat("-o \"{0}\" \"{1}\"", fileInput.OutputFile, fileInput.InputFile);
             }
 
-            Debug.WriteLine("gpg args: " + args.ToString());
+            var finalArg = args.ToString();
+            Debug.WriteLine("gpg args: " + finalArg);
 
-            Process p = new Process();
-            p.StartInfo.FileName = GpgConfig.GpgExePath;
-            p.StartInfo.Arguments = args.ToString();
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.RedirectStandardInput = true;
-
-            return p;
+            return finalArg;
         }
 
         #endregion

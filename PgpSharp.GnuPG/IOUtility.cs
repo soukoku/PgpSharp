@@ -11,8 +11,7 @@ namespace PgpSharp
     static class IOUtility
     {
         /// <summary>
-        /// Pushes the <see cref="SecureString"/> char-by-char to the specified input
-        /// and add a new-line at end to simulate enter key.
+        /// Pushes the <see cref="SecureString"/> char-by-char to the specified input.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="secret">The secret.</param>
@@ -36,7 +35,6 @@ namespace PgpSharp
                 {
                     Marshal.ZeroFreeBSTR(ptr);
                 }
-                input.Write(Environment.NewLine);
                 input.Flush();
             }
         }

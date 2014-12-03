@@ -54,6 +54,7 @@
     <Compile Include="GpgTool.cs" />
     <Compile Include="IOUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RedirectedProcess.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PgpSharp\PgpSharp.csproj">

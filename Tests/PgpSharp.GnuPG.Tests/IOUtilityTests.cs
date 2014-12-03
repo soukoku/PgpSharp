@@ -38,8 +38,7 @@ namespace PgpSharp.GnuPG
             using (SecureString ss = Util.MakeSecureString(text))
             {
                 IOUtility.PushSecret(sw, ss);
-                // add new line due to the push adding it
-                Assert.AreEqual(text + Environment.NewLine, sb.ToString());
+                Assert.AreEqual(text, sb.ToString());
             }
         }
 
@@ -53,7 +52,7 @@ namespace PgpSharp.GnuPG
             using (SecureString ss = Util.MakeSecureString(text))
             {
                 IOUtility.PushSecret(sw, ss);
-                Assert.AreEqual(text + Environment.NewLine, sb.ToString());
+                Assert.AreEqual(text, sb.ToString());
             }
         }
     }
