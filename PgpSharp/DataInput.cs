@@ -30,7 +30,7 @@ namespace PgpSharp
         public string Originator { get; set; }
 
         /// <summary>
-        /// Gets or sets the recipient. Required to decrypt/encrypt.
+        /// Gets or sets the recipient. Required to encrypt.
         /// </summary>
         /// <value>
         /// The recipient.
@@ -84,7 +84,6 @@ namespace PgpSharp
             switch (Operation)
             {
                 case DataOperation.Decrypt:
-                    RequireRecipient();
                     RequirePasspharse();
                     break;
                 case DataOperation.Encrypt:

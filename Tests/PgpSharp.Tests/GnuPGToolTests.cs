@@ -66,7 +66,6 @@ namespace PgpSharp.GnuPG
                 InputFile = encryptedFile,
                 OutputFile = decryptedFile,
                 Operation = DataOperation.Decrypt,
-                Recipient = TESTER_NAME,
                 Passphrase = __passphrase
             };
             tool.ProcessData(decryptArg);
@@ -107,7 +106,6 @@ namespace PgpSharp.GnuPG
                 InputFile = encryptedFile,
                 OutputFile = decryptedFile,
                 Operation = DataOperation.Decrypt,
-                Recipient = TESTER_NAME,
                 Passphrase = __passphrase
             };
             tool.ProcessData(decryptArg);
@@ -146,7 +144,6 @@ namespace PgpSharp.GnuPG
                     {
                         InputData = encryptStream,
                         Operation = DataOperation.Decrypt,
-                        Recipient = TESTER_NAME,
                         Passphrase = __passphrase
                     };
                     using (var decryptedStream = tool.ProcessData(decryptArg))
@@ -184,7 +181,6 @@ namespace PgpSharp.GnuPG
                     {
                         InputData = encryptStream,
                         Operation = DataOperation.Decrypt,
-                        Recipient = TESTER_NAME,
                         Passphrase = __passphrase
                     };
                     using (var decryptedStream = tool.ProcessData(decryptArg))

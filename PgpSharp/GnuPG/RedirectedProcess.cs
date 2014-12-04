@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using System.Text;
+using System.Threading;
 
 namespace PgpSharp.GnuPG
 {
@@ -29,11 +30,11 @@ namespace PgpSharp.GnuPG
 
             _process.OutputDataReceived += (s, e) =>
             {
-                _output.Append(e.Data);
+                _output.AppendLine(e.Data);
             };
             _process.ErrorDataReceived += (s, e) =>
             {
-                _errors.Append(e.Data);
+                _errors.AppendLine(e.Data);
             };
         }
 
@@ -65,11 +66,20 @@ namespace PgpSharp.GnuPG
             return false;
         }
 
-        public void WaitForExit()
+        public void WaitForExit() { WaitForExit(-1); }
+        public void WaitForExit(int timeout)
         {
             CheckDisposed();
-            _process.WaitForExit();
+            _process.WaitForExit(timeout);
             ExitCode = _process.ExitCode;
+
+            if (timeout > 0)
+            {
+                // wait again for redirected outputs to finish
+                _process.WaitForExit();
+            }
+            _process.CancelErrorRead();
+            _process.CancelOutputRead();
         }
 
         void CheckDisposed()

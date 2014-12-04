@@ -17,6 +17,14 @@ namespace PgpSharp.GnuPG
         #region IPgpTool Members
 
         /// <summary>
+        /// Gets or sets a different keyring folder than default.
+        /// </summary>
+        /// <value>
+        /// The keyring folder.
+        /// </value>
+        public string KeyringFolder { get; set; }
+
+        /// <summary>
         /// Processes data with stream input.
         /// </summary>
         /// <param name="input">The input.</param>
@@ -101,7 +109,7 @@ namespace PgpSharp.GnuPG
         }
 
 
-        static string CreateCommandLineArgs(DataInput input)
+        string CreateCommandLineArgs(DataInput input)
         {
             // yes to all confirmations, batch for no prompt
             StringBuilder args = new StringBuilder("--yes --batch ");
@@ -109,11 +117,15 @@ namespace PgpSharp.GnuPG
             {
                 args.Append("-a ");
             }
+            if (!string.IsNullOrWhiteSpace(KeyringFolder))
+            {
+                args.AppendFormat("--homedir \"{0}\" ", KeyringFolder);
+            }
             switch (input.Operation)
             {
                 case DataOperation.Decrypt:
-                    // [d]ecrypt for [u]ser
-                    args.AppendFormat("-d -u \"{0}\" ", input.Recipient);
+                    // [d]ecrypt
+                    args.Append("-d ");
                     break;
                 case DataOperation.Encrypt:
                     // [e]ncrypt for [r]ecipient
@@ -127,7 +139,7 @@ namespace PgpSharp.GnuPG
                     args.AppendFormat("--clearsign -u \"{0}\" ", input.Originator);
                     break;
                 case DataOperation.SignAndEncrypt:
-                    args.AppendFormat("-s -e -r \"{0}\" -u \"{1}\" ", input.Recipient, input.Originator);
+                    args.AppendFormat("-se -r \"{0}\" -u \"{1}\" ", input.Recipient, input.Originator);
                     break;
                 //case DataOperation.Verify:
                 //    args.Append("--verify ");

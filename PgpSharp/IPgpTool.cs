@@ -12,6 +12,14 @@ namespace PgpSharp
     public interface IPgpTool
     {
         /// <summary>
+        /// Gets or sets a different keyring folder than default.
+        /// </summary>
+        /// <value>
+        /// The keyring folder.
+        /// </value>
+        string KeyringFolder { get; set; }
+
+        /// <summary>
         /// Processes data with stream input.
         /// </summary>
         /// <param name="input">The input.</param>

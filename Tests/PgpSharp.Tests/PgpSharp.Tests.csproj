@@ -64,6 +64,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GnuPGToolTests.cs" />
     <Compile Include="TempFileStreamTests.cs" />
+    <Compile Include="RedirectedProcessTests.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
