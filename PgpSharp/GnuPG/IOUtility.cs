@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 
-namespace PgpSharp
+namespace PgpSharp.GnuPG
 {
     static class IOUtility
     {

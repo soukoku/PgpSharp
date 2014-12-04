@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace PgpSharp
+namespace PgpSharp.GnuPG
 {
     /// <summary>
     /// Contains configuration values for using GnuPG.

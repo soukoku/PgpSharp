@@ -6,7 +6,7 @@ using System.Linq;
 using System.Security;
 using System.Text;
 
-namespace PgpSharp
+namespace PgpSharp.GnuPG
 {
     /// <summary>
     /// Wraps a process with redirected input/outputs.

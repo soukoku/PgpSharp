@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 
-namespace PgpSharp
+namespace PgpSharp.GnuPG
 {
     /// <summary>
     /// Implements <see cref="IPgpTool"/> as a gnupg cli wrapper.

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace PgpSharp
+namespace PgpSharp.GnuPG
 {
     /// <summary>
     /// A read-only file stream that will delete the underlying file when disposed.

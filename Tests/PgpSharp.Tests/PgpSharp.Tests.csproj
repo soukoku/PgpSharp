@@ -6,8 +6,8 @@
     <ProjectGuid>{F7164DA4-0CA9-4CFC-8B76-AEA4E47CA98D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PgpSharp.GnuPG</RootNamespace>
-    <AssemblyName>PgpSharp.GnuPG.Tests</AssemblyName>
+    <RootNamespace>PgpSharp</RootNamespace>
+    <AssemblyName>PgpSharp.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -67,10 +67,6 @@
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PgpSharp.GnuPG\PgpSharp.GnuPG.csproj">
-      <Project>{327d82f6-0a72-4cba-861b-76a341e76e8a}</Project>
-      <Name>PgpSharp.GnuPG</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\PgpSharp\PgpSharp.csproj">
       <Project>{3bc39b3d-b478-41c8-865d-72dbc39143a0}</Project>
       <Name>PgpSharp</Name>
