@@ -67,6 +67,7 @@ namespace PgpSharp
                     case PgpSharp.DataOperation.Decrypt:
                     case PgpSharp.DataOperation.SignAndEncrypt:
                     case PgpSharp.DataOperation.Sign:
+                    case DataOperation.ClearSign:
                         return true;
                 }
                 return false;
@@ -89,6 +90,7 @@ namespace PgpSharp
                     RequireRecipient();
                     break;
                 case DataOperation.Sign:
+                case DataOperation.ClearSign:
                     RequireOriginator();
                     RequirePasspharse();
                     break;

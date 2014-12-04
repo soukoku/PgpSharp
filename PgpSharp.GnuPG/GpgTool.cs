@@ -37,7 +37,7 @@ namespace PgpSharp
             {
                 using (var fs = File.OpenWrite(tempInFile))
                 {
-                    IOUtility.CopyStream(input.InputData, fs, 4096);
+                    IOUtility.CopyStream(input.InputData, fs);
                 }
                 var newArg = new FileDataInput
                 {
@@ -99,6 +99,7 @@ namespace PgpSharp
 
         static string CreateCommandLineArgs(DataInput input)
         {
+            // yes to all confirmations, batch for no prompt
             StringBuilder args = new StringBuilder("--yes --batch ");
             if (input.Armorize)
             {
@@ -107,24 +108,31 @@ namespace PgpSharp
             switch (input.Operation)
             {
                 case DataOperation.Decrypt:
+                    // [d]ecrypt for [u]ser
                     args.AppendFormat("-d -u \"{0}\" ", input.Recipient);
                     break;
                 case DataOperation.Encrypt:
+                    // [e]ncrypt for [r]ecipient
                     args.AppendFormat("-e -r \"{0}\" ", input.Recipient);
                     break;
                 case DataOperation.Sign:
+                    // [s]ign for [u]ser
                     args.AppendFormat("-s -u \"{0}\" ", input.Originator);
+                    break;
+                case DataOperation.ClearSign:
+                    args.AppendFormat("--clearsign -u \"{0}\" ", input.Originator);
                     break;
                 case DataOperation.SignAndEncrypt:
                     args.AppendFormat("-s -e -r \"{0}\" -u \"{1}\" ", input.Recipient, input.Originator);
                     break;
-                case DataOperation.Verify:
-                    args.Append("--verify ");
-                    break;
+                //case DataOperation.Verify:
+                //    args.Append("--verify ");
+                //    break;
             }
 
             if (input.NeedsPassphrase)
             {
+                // will enter passphrase via std in
                 args.Append("--passphrase-fd 0 ");
             }
 

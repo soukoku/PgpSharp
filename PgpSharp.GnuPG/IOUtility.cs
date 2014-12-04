@@ -39,6 +39,11 @@ namespace PgpSharp
             }
         }
 
+
+        public static void CopyStream(Stream input, Stream output)
+        {
+            CopyStream(input, output, 4096);
+        }
         public static void CopyStream(Stream input, Stream output, int bufferSize)
         {
             byte[] buff = new byte[bufferSize];

@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("PgpSharp.GnuPG")]
-[assembly: AssemblyDescription("Implements PgpSharp operations by calling gnupg via command line.")]
+[assembly: AssemblyDescription("Implements PgpSharp operations by running GnuPG via command line.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("PgpSharp.GnuPG")]
 [assembly: AssemblyTrademark("")]

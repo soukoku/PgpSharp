@@ -55,7 +55,7 @@ namespace PgpSharp.GnuPG
                 Recipient = TESTER_NAME,
             };
 
-            GpgTool tool = new GpgTool();
+            IPgpTool tool = new GpgTool();
             tool.ProcessData(encryptArg);
 
             Assert.IsTrue(File.Exists(encryptedFile), "Encrypted file not found.");
@@ -96,7 +96,7 @@ namespace PgpSharp.GnuPG
                 Recipient = TESTER_NAME,
             };
 
-            GpgTool tool = new GpgTool();
+            IPgpTool tool = new GpgTool();
             tool.ProcessData(encryptArg);
 
             Assert.IsTrue(File.Exists(encryptedFile), "Encrypted file not found.");
@@ -138,7 +138,7 @@ namespace PgpSharp.GnuPG
                     Recipient = TESTER_NAME,
                 };
 
-                GpgTool tool = new GpgTool();
+                IPgpTool tool = new GpgTool();
 
                 using (var encryptStream = tool.ProcessData(encryptArg))
                 {
@@ -176,7 +176,7 @@ namespace PgpSharp.GnuPG
                     Recipient = TESTER_NAME,
                 };
 
-                GpgTool tool = new GpgTool();
+                IPgpTool tool = new GpgTool();
 
                 using (var encryptStream = tool.ProcessData(encryptArg))
                 {
@@ -190,7 +190,7 @@ namespace PgpSharp.GnuPG
                     using (var decryptedStream = tool.ProcessData(decryptArg))
                     using (MemoryStream testStream = new MemoryStream())
                     {
-                        IOUtility.CopyStream(decryptedStream, testStream, 4096);
+                        IOUtility.CopyStream(decryptedStream, testStream);
 
                         byte[] origBytes = File.ReadAllBytes(origFile);
                         byte[] finalBytes = testStream.ToArray();

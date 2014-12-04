@@ -19,6 +19,24 @@ namespace PgpSharp
 
         private static string __gpgExePath = TryFindGpgPath();
 
+        /// <summary>
+        /// Gets or sets the GPG executable path.
+        /// </summary>
+        /// <value>
+        /// The GPG executable path.
+        /// </value>
+        public static string GpgExePath
+        {
+            get { return __gpgExePath; }
+            set
+            {
+                if (File.Exists(value))
+                {
+                    __gpgExePath = value;
+                }
+            }
+        }
+
         private static string TryFindGpgPath()
         {
             // try config first, otherwise search typical gpg install folder
@@ -50,24 +68,6 @@ namespace PgpSharp
                 folder = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles(x86)"), "Gnu\\GnuPG");
             }
             return folder;
-        }
-
-        /// <summary>
-        /// Gets or sets the GPG executable path.
-        /// </summary>
-        /// <value>
-        /// The GPG executable path.
-        /// </value>
-        public static string GpgExePath
-        {
-            get { return __gpgExePath; }
-            set
-            {
-                if (File.Exists(value))
-                {
-                    __gpgExePath = value;
-                }
-            }
         }
 
     }
