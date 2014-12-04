@@ -16,6 +16,6 @@
 		<tags>pgp openpgp gpg</tags>
 	</metadata>
 	<files>
-		<file src="bin\$configuration$\$id$.pdb" target="lib\net35-Client"/>
+		<file src="bin\$configuration$\$id$.pdb" target="lib\net40-Client"/>
 	</files>
 </package>

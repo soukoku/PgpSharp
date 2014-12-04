@@ -11,11 +11,11 @@ namespace PgpSharp
     static class IOUtility
     {
         /// <summary>
-        /// Pushes the <see cref="SecureString"/> char-by-char to the specified input.
+        /// Writes the <see cref="SecureString"/> char-by-char to the specified input.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="secret">The secret.</param>
-        public static void PushSecret(TextWriter input, SecureString secret)
+        public static void WriteSecret(this TextWriter input, SecureString secret)
         {
             if (input != null && secret != null && secret.Length > 0)
             {
@@ -35,22 +35,17 @@ namespace PgpSharp
                 {
                     Marshal.ZeroFreeBSTR(ptr);
                 }
-                input.Flush();
             }
         }
 
-
-        public static void CopyStream(Stream input, Stream output)
+        public static void DeleteFiles(params string[] files)
         {
-            CopyStream(input, output, 4096);
-        }
-        public static void CopyStream(Stream input, Stream output, int bufferSize)
-        {
-            byte[] buff = new byte[bufferSize];
-            int read = 0;
-            while ((read = input.Read(buff, 0, buff.Length)) > 0)
+            if (files != null)
             {
-                output.Write(buff, 0, read);
+                foreach (var f in files)
+                {
+                    if (File.Exists(f)) { File.Delete(f); }
+                }
             }
         }
     }

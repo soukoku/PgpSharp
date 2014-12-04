@@ -10,12 +10,12 @@ namespace PgpSharp
     /// <summary>
     /// Contains configuration values for using GnuPG.
     /// </summary>
-    public static class GpgConfig
+    public static class GnuPGConfig
     {
         /// <summary>
         /// The GPG executable path key for appSettings.
         /// </summary>
-        public const string GpgExePathKey = "pgpsharp:GpgExePath";
+        public const string GnuPGExePathKey = "pgpsharp:GnuPGExePath";
 
         private static string __gpgExePath = TryFindGpgPath();
 
@@ -25,7 +25,7 @@ namespace PgpSharp
         /// <value>
         /// The GPG executable path.
         /// </value>
-        public static string GpgExePath
+        public static string GnuPGExePath
         {
             get { return __gpgExePath; }
             set
@@ -40,7 +40,7 @@ namespace PgpSharp
         private static string TryFindGpgPath()
         {
             // try config first, otherwise search typical gpg install folder
-            var exe = ConfigurationManager.AppSettings[GpgExePathKey];
+            var exe = ConfigurationManager.AppSettings[GnuPGExePathKey];
 
             if (!File.Exists(exe))
             {

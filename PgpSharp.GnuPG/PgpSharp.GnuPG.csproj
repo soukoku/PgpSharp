@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PgpSharp</RootNamespace>
     <AssemblyName>PgpSharp.GnuPG</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -50,8 +51,8 @@
     <Compile Include="..\PgpSharp\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="GpgConfig.cs" />
-    <Compile Include="GpgTool.cs" />
+    <Compile Include="GnuPGConfig.cs" />
+    <Compile Include="GnuPGTool.cs" />
     <Compile Include="IOUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedirectedProcess.cs" />

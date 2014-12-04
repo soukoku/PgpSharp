@@ -10,26 +10,26 @@ namespace PgpSharp.GnuPG
     public class IOUtilityTests
     {
         [TestMethod]
-        public void PushSecret_Should_Ignore_Null_Or_Empty()
+        public void WriteSecret_Should_Ignore_Null_Or_Empty()
         {
             // throw no exceptions with null args
-            IOUtility.PushSecret(null, null);
+            IOUtility.WriteSecret(null, null);
             using (var ss = new SecureString())
             {
-                IOUtility.PushSecret(null, ss);
+                IOUtility.WriteSecret(null, ss);
 
                 // test with empty
                 StringBuilder sb = new StringBuilder();
                 using (StringWriter sw = new StringWriter(sb))
                 {
-                    IOUtility.PushSecret(sw, ss);
+                    IOUtility.WriteSecret(sw, ss);
                 }
                 Assert.IsTrue(sb.Length == 0, "Written string not empty.");
             }
         }
 
         [TestMethod]
-        public void PushSecret_Works_With_Ascii_Text()
+        public void WriteSecret_Works_With_Ascii_Text()
         {
             string text = "simple text";
 
@@ -37,13 +37,13 @@ namespace PgpSharp.GnuPG
             using (StringWriter sw = new StringWriter(sb))
             using (SecureString ss = Util.MakeSecureString(text))
             {
-                IOUtility.PushSecret(sw, ss);
+                IOUtility.WriteSecret(sw, ss);
                 Assert.AreEqual(text, sb.ToString());
             }
         }
 
         [TestMethod]
-        public void PushSecret_Works_With_Non_Ascii_Text()
+        public void WriteSecret_Works_With_Non_Ascii_Text()
         {
             string text = "日本語です";
 
@@ -51,7 +51,7 @@ namespace PgpSharp.GnuPG
             using (StringWriter sw = new StringWriter(sb))
             using (SecureString ss = Util.MakeSecureString(text))
             {
-                IOUtility.PushSecret(sw, ss);
+                IOUtility.WriteSecret(sw, ss);
                 Assert.AreEqual(text, sb.ToString());
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Security;
 using System.Text;
@@ -14,18 +15,28 @@ namespace PgpSharp
     {
         public RedirectedProcess(string exeFile, string args)
         {
-            _psi = new ProcessStartInfo(exeFile, args);
-            _psi.UseShellExecute = false;
-            _psi.CreateNoWindow = true;
-            _psi.RedirectStandardInput = true;
-            _psi.RedirectStandardOutput = true;
-            _psi.RedirectStandardError = true;
-
             _errors = new StringBuilder();
             _output = new StringBuilder();
+
+            _process = new Process();
+            _process.StartInfo.FileName = exeFile;
+            _process.StartInfo.Arguments = args;
+            _process.StartInfo.UseShellExecute = false;
+            _process.StartInfo.CreateNoWindow = true;
+            _process.StartInfo.RedirectStandardInput = true;
+            _process.StartInfo.RedirectStandardOutput = true;
+            _process.StartInfo.RedirectStandardError = true;
+
+            _process.OutputDataReceived += (s, e) =>
+            {
+                _output.Append(e.Data);
+            };
+            _process.ErrorDataReceived += (s, e) =>
+            {
+                _errors.Append(e.Data);
+            };
         }
 
-        ProcessStartInfo _psi;
         Process _process;
         StringBuilder _errors;
         StringBuilder _output;
@@ -33,44 +44,37 @@ namespace PgpSharp
         public int ExitCode { get; private set; }
         public string Error { get { return _errors.ToString(); } }
         public string Output { get { return _output.ToString(); } }
+        public TextWriter Input
+        {
+            get
+            {
+                CheckDisposed();
+                return _process.StandardInput;
+            }
+        }
 
         public bool Start()
         {
-            if (_process == null)
+            CheckDisposed();
+            if (_process.Start())
             {
-                _process = new Process { StartInfo = _psi };
-                _process.OutputDataReceived += (s, e) =>
-                {
-                    _output.Append(e.Data);
-                };
-                _process.ErrorDataReceived += (s, e) =>
-                {
-                    _errors.Append(e.Data);
-                };
-                if (_process.Start())
-                {
-                    _process.BeginOutputReadLine();
-                    _process.BeginErrorReadLine();
-                    return true;
-                }
+                _process.BeginOutputReadLine();
+                _process.BeginErrorReadLine();
+                return true;
             }
             return false;
         }
 
         public void WaitForExit()
         {
+            CheckDisposed();
             _process.WaitForExit();
             ExitCode = _process.ExitCode;
         }
 
-        public void PushInput(SecureString secureString)
+        void CheckDisposed()
         {
-            IOUtility.PushSecret(_process.StandardInput, secureString);
-        }
-
-        public void PushInput(string text)
-        {
-            _process.StandardInput.Write(text);
+            if (_process == null) { throw new ObjectDisposedException(typeof(RedirectedProcess).Name); }
         }
 
         #region IDisposable Members

@@ -21,13 +21,5 @@ namespace PgpSharp.GnuPG
             }
             return ss;
         }
-
-        public static void CleanFiles(params string[] files)
-        {
-            foreach (var f in files)
-            {
-                if (File.Exists(f)) { File.Delete(f); }
-            }
-        }
     }
 }

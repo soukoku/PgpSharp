@@ -7,7 +7,7 @@ using System.Security;
 namespace PgpSharp.GnuPG
 {
     [TestClass]
-    public class GpgToolTests
+    public class GnuPGToolTests
     {
         // This assumes there's a key-pair created in gpg keyring aleady.
         // Params used to create the test key are:
@@ -44,18 +44,18 @@ namespace PgpSharp.GnuPG
             string origFile = Path.Combine(__samplesFolder, "OriginalText.txt");
             string encryptedFile = Path.Combine(__samplesFolder, "OriginalText_Encrypted.pgp");
             string decryptedFile = Path.Combine(__samplesFolder, "OriginalText_Decrypted.txt");
-            Util.CleanFiles(encryptedFile, decryptedFile);
+            IOUtility.DeleteFiles(encryptedFile, decryptedFile);
 
             var encryptArg = new FileDataInput
             {
-                Armorize = true,
+                Armor = true,
                 InputFile = origFile,
                 OutputFile = encryptedFile,
                 Operation = DataOperation.Encrypt,
                 Recipient = TESTER_NAME,
             };
 
-            IPgpTool tool = new GpgTool();
+            IPgpTool tool = new GnuPGTool();
             tool.ProcessData(encryptArg);
 
             Assert.IsTrue(File.Exists(encryptedFile), "Encrypted file not found.");
@@ -76,7 +76,7 @@ namespace PgpSharp.GnuPG
             string origText = File.ReadAllText(origFile);
             string finalText = File.ReadAllText(decryptedFile);
             Assert.AreEqual(origText, finalText, "Roundtrip got diffent file.");
-            Util.CleanFiles(encryptedFile, decryptedFile);
+            IOUtility.DeleteFiles(encryptedFile, decryptedFile);
         }
 
         [TestMethod]
@@ -85,18 +85,18 @@ namespace PgpSharp.GnuPG
             string origFile = Path.Combine(__samplesFolder, "OriginalBinary.png");
             string encryptedFile = Path.Combine(__samplesFolder, "OriginalBinary_Encrypted.pgp");
             string decryptedFile = Path.Combine(__samplesFolder, "OriginalBinary_Decrypted.png");
-            Util.CleanFiles(encryptedFile, decryptedFile);
+            IOUtility.DeleteFiles(encryptedFile, decryptedFile);
 
             var encryptArg = new FileDataInput
             {
-                Armorize = true,
+                Armor = true,
                 InputFile = origFile,
                 OutputFile = encryptedFile,
                 Operation = DataOperation.Encrypt,
                 Recipient = TESTER_NAME,
             };
 
-            IPgpTool tool = new GpgTool();
+            IPgpTool tool = new GnuPGTool();
             tool.ProcessData(encryptArg);
 
             Assert.IsTrue(File.Exists(encryptedFile), "Encrypted file not found.");
@@ -117,7 +117,7 @@ namespace PgpSharp.GnuPG
             byte[] origBytes = File.ReadAllBytes(origFile);
             byte[] finalBytes = File.ReadAllBytes(decryptedFile);
             CollectionAssert.AreEqual(origBytes, finalBytes, "Roundtrip got diffent file.");
-            Util.CleanFiles(encryptedFile, decryptedFile);
+            IOUtility.DeleteFiles(encryptedFile, decryptedFile);
         }
 
 
@@ -132,13 +132,13 @@ namespace PgpSharp.GnuPG
             {
                 var encryptArg = new StreamDataInput
                 {
-                    Armorize = true,
+                    Armor = true,
                     InputData = origFs,
                     Operation = DataOperation.Encrypt,
                     Recipient = TESTER_NAME,
                 };
 
-                IPgpTool tool = new GpgTool();
+                IPgpTool tool = new GnuPGTool();
 
                 using (var encryptStream = tool.ProcessData(encryptArg))
                 {
@@ -170,13 +170,13 @@ namespace PgpSharp.GnuPG
             {
                 var encryptArg = new StreamDataInput
                 {
-                    Armorize = true,
+                    Armor = true,
                     InputData = origFs,
                     Operation = DataOperation.Encrypt,
                     Recipient = TESTER_NAME,
                 };
 
-                IPgpTool tool = new GpgTool();
+                IPgpTool tool = new GnuPGTool();
 
                 using (var encryptStream = tool.ProcessData(encryptArg))
                 {
@@ -190,7 +190,7 @@ namespace PgpSharp.GnuPG
                     using (var decryptedStream = tool.ProcessData(decryptArg))
                     using (MemoryStream testStream = new MemoryStream())
                     {
-                        IOUtility.CopyStream(decryptedStream, testStream);
+                        decryptedStream.CopyTo(testStream);
 
                         byte[] origBytes = File.ReadAllBytes(origFile);
                         byte[] finalBytes = testStream.ToArray();

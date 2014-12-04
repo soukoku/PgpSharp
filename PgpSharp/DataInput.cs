@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security;
@@ -42,7 +43,7 @@ namespace PgpSharp
         /// <value>
         ///   <c>true</c> to armorize; otherwise, <c>false</c>.
         /// </value>
-        public bool Armorize { get; set; }
+        public bool Armor { get; set; }
 
         /// <summary>
         /// Gets or sets the passphrase if the operation. Required to sign and decrypt.
@@ -100,7 +101,7 @@ namespace PgpSharp
                     RequirePasspharse();
                     break;
                 default:
-                    throw new PgpException(string.Format("Unknown operation {0}.", Operation));
+                    throw new PgpException(string.Format(CultureInfo.InvariantCulture, "Unknown operation {0}.", Operation));
             }
         }
 
@@ -108,7 +109,7 @@ namespace PgpSharp
         {
             if (Passphrase == null || Passphrase.Length == 0)
             {
-                throw new PgpException(string.Format("Passphrase is required for {0} operation.", Operation));
+                throw new PgpException(string.Format(CultureInfo.InvariantCulture, "Passphrase is required for {0} operation.", Operation));
             }
         }
 
@@ -116,7 +117,7 @@ namespace PgpSharp
         {
             if (string.IsNullOrEmpty(Originator))
             {
-                throw new PgpException(string.Format("Originator is required for {0} operation.", Operation));
+                throw new PgpException(string.Format(CultureInfo.InvariantCulture, "Originator is required for {0} operation.", Operation));
             }
         }
 
@@ -124,7 +125,7 @@ namespace PgpSharp
         {
             if (string.IsNullOrEmpty(Recipient))
             {
-                throw new PgpException(string.Format("Recipient is required for {0} operation.", Operation));
+                throw new PgpException(string.Format(CultureInfo.InvariantCulture, "Recipient is required for {0} operation.", Operation));
             }
         }
     }

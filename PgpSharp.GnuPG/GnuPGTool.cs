@@ -12,7 +12,7 @@ namespace PgpSharp
     /// <summary>
     /// Implements <see cref="IPgpTool"/> as a gnupg cli wrapper.
     /// </summary>
-    public class GpgTool : IPgpTool
+    public class GnuPGTool : IPgpTool
     {
         #region IPgpTool Members
 
@@ -31,17 +31,20 @@ namespace PgpSharp
             input.Verify();
 
             // only way to reliably make this work is save to file and process it instead.
-            var tempInFile = Path.GetTempFileName();
-            var tempOutFile = Path.GetTempFileName();
+            string tempInFile = null;
+            string tempOutFile = null;
             try
             {
+                tempInFile = Path.GetTempFileName();
+                tempOutFile = Path.GetTempFileName();
+
                 using (var fs = File.OpenWrite(tempInFile))
                 {
-                    IOUtility.CopyStream(input.InputData, fs);
+                    input.InputData.CopyTo(fs);
                 }
                 var newArg = new FileDataInput
                 {
-                    Armorize = input.Armorize,
+                    Armor = input.Armor,
                     InputFile = tempInFile,
                     Operation = input.Operation,
                     Originator = input.Originator,
@@ -54,12 +57,12 @@ namespace PgpSharp
             }
             catch
             {
-                if (File.Exists(tempOutFile)) { File.Delete(tempOutFile); }
+                IOUtility.DeleteFiles(tempOutFile);
                 throw;
             }
             finally
             {
-                if (File.Exists(tempInFile)) { File.Delete(tempInFile); }
+                IOUtility.DeleteFiles(tempInFile);
             }
         }
 
@@ -73,14 +76,15 @@ namespace PgpSharp
         {
             if (input == null) { throw new ArgumentNullException("input"); }
             input.Verify();
-            using (var proc = new RedirectedProcess(GpgConfig.GpgExePath, CreateCommandLineArgs(input)))
+            using (var proc = new RedirectedProcess(GnuPGConfig.GnuPGExePath, CreateCommandLineArgs(input)))
             {
                 if (proc.Start())
                 {
                     if (input.NeedsPassphrase)
                     {
-                        proc.PushInput(input.Passphrase);
-                        proc.PushInput(Environment.NewLine);
+                        proc.Input.WriteSecret(input.Passphrase);
+                        proc.Input.Write(Environment.NewLine);
+                        proc.Input.Flush();
                     }
                     proc.WaitForExit();
 
@@ -101,7 +105,7 @@ namespace PgpSharp
         {
             // yes to all confirmations, batch for no prompt
             StringBuilder args = new StringBuilder("--yes --batch ");
-            if (input.Armorize)
+            if (input.Armor)
             {
                 args.Append("-a ");
             }
