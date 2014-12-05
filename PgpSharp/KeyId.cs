@@ -12,13 +12,15 @@ namespace PgpSharp
     public class KeyId
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyId"/> class.
+        /// Initializes a new instance of the <see cref="KeyId" /> class.
         /// </summary>
         /// <param name="keyId">The key id.</param>
+        /// <param name="fingerPrint">The finger print.</param>
         /// <param name="userIds">The user ids.</param>
-        public KeyId(string keyId, IEnumerable<string> userIds)
+        public KeyId(string keyId, string fingerPrint, IEnumerable<string> userIds)
         {
             Id = keyId;
+            Fingerprint = fingerPrint;
             UserIds = userIds;
         }
 
@@ -37,6 +39,14 @@ namespace PgpSharp
         /// The user ids.
         /// </value>
         public IEnumerable<string> UserIds { get; private set; }
+
+        /// <summary>
+        /// Gets the fingerprint.
+        /// </summary>
+        /// <value>
+        /// The fingerprint.
+        /// </value>
+        public string Fingerprint { get; private set; }
 
 
         /// <summary>

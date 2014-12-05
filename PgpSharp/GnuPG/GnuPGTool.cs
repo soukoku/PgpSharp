@@ -171,11 +171,11 @@ namespace PgpSharp.GnuPG
         /// <returns></returns>
         public IEnumerable<KeyId> ListKeys(KeyTarget target)
         {
-            var args = "--list-public-keys";
+            var args = "--fixed-list-mode --with-colons --with-fingerprint --list-public-keys";
             var keyHead = "pub";
             if (target == KeyTarget.Secret)
             {
-                args = "--list-secret-keys";
+                args = "--fixed-list-mode --with-colons --with-fingerprint --list-secret-keys";
                 keyHead = "sec";
             }
 
@@ -188,34 +188,36 @@ namespace PgpSharp.GnuPG
                     string[] lines = proc.Output.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                     for (int i = 0; i < lines.Length; i++)
                     {
-                        var curLine = lines[i];
-                        if (curLine.StartsWith(keyHead))
+                        var parts = lines[i].Split(':');
+                        if (parts[0] == keyHead)
                         {
-                            // TODO: might use regex but anyway
-
-                            // parse key head
-                            var parts = curLine.Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                            var id = parts[1].Substring(parts[1].IndexOf('/') + 1);
+                            var id = parts[4];
                             i++;
 
-                            // read all uid lines
+                            // read more lines as part of this key
+                            string finger = null;
                             List<string> users = new List<string>();
                             for (; i < lines.Length; i++)
                             {
-                                curLine = lines[i];
-                                if (curLine.StartsWith("uid"))
+                                parts = lines[i].Split(':');
+                                if (parts[0] == keyHead)
                                 {
-                                    // could be wrong
-                                    users.Add(curLine.Substring(21));
-                                }
-                                else
-                                {
+                                    // another key, exit loop
                                     i--;
                                     break;
                                 }
+                                switch (parts[0])
+                                {
+                                    case "uid":
+                                        users.Add(IOUtility.DecodeAsciiEscapes(parts[9]));
+                                        break;
+                                    case "fpr":
+                                        finger = parts[9];
+                                        break;
+                                }
                             }
 
-                            yield return new KeyId(id, users);
+                            yield return new KeyId(id, finger, users);
                         }
                     }
                 }

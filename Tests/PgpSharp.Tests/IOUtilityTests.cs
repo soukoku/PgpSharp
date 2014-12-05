@@ -9,6 +9,8 @@ namespace PgpSharp.GnuPG
     [TestClass]
     public class IOUtilityTests
     {
+        #region WriteSecret
+
         [TestMethod]
         public void WriteSecret_Should_Ignore_Null_Or_Empty()
         {
@@ -55,5 +57,52 @@ namespace PgpSharp.GnuPG
                 Assert.AreEqual(text, sb.ToString());
             }
         }
+
+        #endregion
+
+        #region DecodeAsciiEscapes
+
+        [TestMethod]
+        public void DecodeAsciiEscapes_Handles_Null()
+        {
+            string input = null;
+            var output = IOUtility.DecodeAsciiEscapes(input);
+            Assert.AreEqual(input, output);
+        }
+
+        [TestMethod]
+        public void DecodeAsciiEscapes_Handles_No_Escapes()
+        {
+            var input = "hello world!";
+            var output = IOUtility.DecodeAsciiEscapes(input);
+            Assert.AreEqual(input, output);
+        }
+
+        [TestMethod]
+        public void DecodeAsciiEscapes_Handles_One_Escapes()
+        {
+            var input = @"hello\x20world!";
+            var output = IOUtility.DecodeAsciiEscapes(input);
+            Assert.AreEqual("hello world!", output);
+        }
+
+        [TestMethod]
+        public void DecodeAsciiEscapes_Handles_Multiple_Escapes()
+        {
+            // also use this test for begin and end
+            var input = @"\x40hello\x20world!\x3a";
+            var output = IOUtility.DecodeAsciiEscapes(input);
+            Assert.AreEqual("@hello world!:", output);
+        }
+
+        [TestMethod]
+        public void DecodeAsciiEscapes_Handles_Ambiguous_Escapes()
+        {
+            var input = @"\x4010 cats say\x3aa lol cat.";
+            var output = IOUtility.DecodeAsciiEscapes(input);
+            Assert.AreEqual("@10 cats say:a lol cat.", output);
+        }
+
+        #endregion
     }
 }
