@@ -31,5 +31,12 @@ namespace PgpSharp
         /// </summary>
         /// <param name="input">The input.</param>
         void ProcessData(FileDataInput input);
+
+        /// <summary>
+        /// Lists the known keys.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <returns></returns>
+        IEnumerable<KeyId> ListKeys(KeyTarget target);
     }
 }

@@ -84,7 +84,7 @@ namespace PgpSharp.GnuPG
         {
             if (input == null) { throw new ArgumentNullException("input"); }
             input.Verify();
-            using (var proc = new RedirectedProcess(GnuPGConfig.GnuPGExePath, CreateCommandLineArgs(input)))
+            using (var proc = new RedirectedProcess(GnuPGConfig.GnuPGExePath, CreateDataCommandLineArgs(input)))
             {
                 if (proc.Start())
                 {
@@ -109,7 +109,7 @@ namespace PgpSharp.GnuPG
         }
 
 
-        string CreateCommandLineArgs(DataInput input)
+        string CreateDataCommandLineArgs(DataInput input)
         {
             // yes to all confirmations, batch for no prompt
             StringBuilder args = new StringBuilder("--yes --batch ");
@@ -162,6 +162,64 @@ namespace PgpSharp.GnuPG
             Debug.WriteLine("gpg args: " + finalArg);
 
             return finalArg;
+        }
+
+        /// <summary>
+        /// Lists the known keys.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <returns></returns>
+        public IEnumerable<KeyId> ListKeys(KeyTarget target)
+        {
+            var args = "--list-public-keys";
+            var keyHead = "pub";
+            if (target == KeyTarget.Secret)
+            {
+                args = "--list-secret-keys";
+                keyHead = "sec";
+            }
+
+            using (var proc = new RedirectedProcess(GnuPGConfig.GnuPGExePath, args))
+            {
+                if (proc.Start())
+                {
+                    proc.WaitForExit();
+
+                    string[] lines = proc.Output.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        var curLine = lines[i];
+                        if (curLine.StartsWith(keyHead))
+                        {
+                            // TODO: might use regex but anyway
+
+                            // parse key head
+                            var parts = curLine.Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                            var id = parts[1].Substring(parts[1].IndexOf('/') + 1);
+                            i++;
+
+                            // read all uid lines
+                            List<string> users = new List<string>();
+                            for (; i < lines.Length; i++)
+                            {
+                                curLine = lines[i];
+                                if (curLine.StartsWith("uid"))
+                                {
+                                    // could be wrong
+                                    users.Add(curLine.Substring(21));
+                                }
+                                else
+                                {
+                                    i--;
+                                    break;
+                                }
+                            }
+
+                            yield return new KeyId(id, users);
+                        }
+                    }
+                }
+            }
         }
 
         #endregion

@@ -3,13 +3,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Reflection;
 using System.Security;
+using System.Linq;
 
 namespace PgpSharp.GnuPG
 {
     [TestClass]
     public class GnuPGToolTests
     {
-        // This assumes there's a key-pair created in gpg keyring aleady.
+        // This assumes there's a test key-pair created in gpg keyring aleady.
         // Params used to create the test key are:
         // Name: Tester
         // Email: tester@test.com
@@ -34,7 +35,7 @@ namespace PgpSharp.GnuPG
         }
 
         static string __samplesFolder;
-        const string TESTER_NAME = "tester";
+        const string TESTER_NAME = "Tester (for testing purposes only) <tester@test.com>";
         static SecureString __passphrase;
 
 
@@ -119,9 +120,6 @@ namespace PgpSharp.GnuPG
         }
 
 
-
-
-
         [TestMethod]
         public void Can_Encrypt_And_Decrypt_Text_Stream()
         {
@@ -153,9 +151,7 @@ namespace PgpSharp.GnuPG
                         string finalText = reader.ReadToEnd();
                         Assert.AreEqual(origText, finalText, "Roundtrip got diffent text.");
                     }
-
                 }
-
             }
         }
 
@@ -192,10 +188,32 @@ namespace PgpSharp.GnuPG
                         byte[] finalBytes = testStream.ToArray();
                         CollectionAssert.AreEqual(origBytes, finalBytes, "Roundtrip got diffent bytes.");
                     }
-
                 }
-
             }
+        }
+
+
+        [TestMethod]
+        public void List_Public_Keys_Gets_Tester_Id()
+        {
+            IPgpTool tool = new GnuPGTool();
+            var keys = tool.ListKeys(KeyTarget.Public).ToList();
+
+            var hit = keys.FirstOrDefault(k => k.UserIds.Contains(TESTER_NAME));
+
+            Assert.IsNotNull(hit, "Didn't find tester key id.");
+        }
+
+
+        [TestMethod]
+        public void List_Secret_Keys_Gets_Tester_Id()
+        {
+            IPgpTool tool = new GnuPGTool();
+            var keys = tool.ListKeys(KeyTarget.Secret).ToList();
+
+            var hit = keys.FirstOrDefault(k => k.UserIds.Contains(TESTER_NAME));
+
+            Assert.IsNotNull(hit, "Didn't find tester key id.");
         }
     }
 }
