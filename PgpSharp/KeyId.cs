@@ -15,12 +15,16 @@ namespace PgpSharp
         /// Initializes a new instance of the <see cref="KeyId" /> class.
         /// </summary>
         /// <param name="keyId">The key id.</param>
-        /// <param name="fingerPrint">The finger print.</param>
+        /// <param name="fingerprint">The finger print.</param>
+        /// <param name="allowedCapability">The allowed capability.</param>
+        /// <param name="usableCapability">The usable capability.</param>
         /// <param name="userIds">The user ids.</param>
-        public KeyId(string keyId, string fingerPrint, IEnumerable<string> userIds)
+        public KeyId(string keyId, string fingerprint, KeyCapabilities allowedCapability, KeyCapabilities usableCapability, IEnumerable<string> userIds)
         {
             Id = keyId;
-            Fingerprint = fingerPrint;
+            Fingerprint = fingerprint;
+            AllowedCapability = allowedCapability;
+            UsableCapability = usableCapability;
             UserIds = userIds;
         }
 
@@ -48,6 +52,21 @@ namespace PgpSharp
         /// </value>
         public string Fingerprint { get; private set; }
 
+        /// <summary>
+        /// Gets the allowed capability for the key.
+        /// </summary>
+        /// <value>
+        /// The capability.
+        /// </value>
+        public KeyCapabilities AllowedCapability { get; private set; }
+
+        /// <summary>
+        /// Gets the usable capability for the key.
+        /// </summary>
+        /// <value>
+        /// The capability.
+        /// </value>
+        public KeyCapabilities UsableCapability { get; private set; }
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="KeyId"/> to <see cref="System.String"/>.

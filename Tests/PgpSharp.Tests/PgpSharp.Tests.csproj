@@ -60,11 +60,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="IOUtilityTests.cs" />
+    <Compile Include="GnuPG\IOUtilityTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GnuPGToolTests.cs" />
-    <Compile Include="TempFileStreamTests.cs" />
-    <Compile Include="RedirectedProcessTests.cs" />
+    <Compile Include="GnuPG\GnuPGToolTests.cs" />
+    <Compile Include="GnuPG\TempFileStreamTests.cs" />
+    <Compile Include="GnuPG\RedirectedProcessTests.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>

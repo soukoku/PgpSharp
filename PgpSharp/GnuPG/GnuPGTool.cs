@@ -188,10 +188,13 @@ namespace PgpSharp.GnuPG
                     string[] lines = proc.Output.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                     for (int i = 0; i < lines.Length; i++)
                     {
-                        var parts = lines[i].Split(':');
-                        if (parts[0] == keyHead)
+                        var fields = lines[i].Split(':');
+                        if (fields[0] == keyHead)
                         {
-                            var id = parts[4];
+                            var id = fields[4];
+                            var allowCap = KeyCapabilities.None;
+                            var useCap = KeyCapabilities.None;
+                            ParseKeyCapField(fields[11], ref allowCap, ref useCap);
                             i++;
 
                             // read more lines as part of this key
@@ -199,27 +202,67 @@ namespace PgpSharp.GnuPG
                             List<string> users = new List<string>();
                             for (; i < lines.Length; i++)
                             {
-                                parts = lines[i].Split(':');
-                                if (parts[0] == keyHead)
+                                fields = lines[i].Split(':');
+                                if (fields[0] == keyHead)
                                 {
                                     // another key, exit loop
                                     i--;
                                     break;
                                 }
-                                switch (parts[0])
+                                switch (fields[0])
                                 {
                                     case "uid":
-                                        users.Add(IOUtility.DecodeAsciiEscapes(parts[9]));
+                                        users.Add(IOUtility.DecodeAsciiEscapes(fields[9]));
                                         break;
                                     case "fpr":
-                                        finger = parts[9];
+                                        finger = fields[9];
                                         break;
                                 }
                             }
 
-                            yield return new KeyId(id, finger, users);
+                            yield return new KeyId(id, finger, allowCap, useCap, users);
                         }
                     }
+                }
+            }
+        }
+
+        static void ParseKeyCapField(string field, ref KeyCapabilities allowed, ref KeyCapabilities usable)
+        {
+            foreach (char c in field)
+            {
+                switch (c)
+                {
+                    case 'e':
+                        allowed |= KeyCapabilities.Encrypt;
+                        break;
+                    case 'E':
+                        usable |= KeyCapabilities.Encrypt;
+                        break;
+                    case 's':
+                        allowed |= KeyCapabilities.Sign;
+                        break;
+                    case 'S':
+                        usable |= KeyCapabilities.Sign;
+                        break;
+                    case 'c':
+                        allowed |= KeyCapabilities.Certify;
+                        break;
+                    case 'C':
+                        usable |= KeyCapabilities.Certify;
+                        break;
+                    case 'a':
+                        allowed |= KeyCapabilities.Authentication;
+                        break;
+                    case 'A':
+                        usable |= KeyCapabilities.Authentication;
+                        break;
+                    case '?':
+                        allowed |= KeyCapabilities.Unknown;
+                        break;
+                    case 'D':
+                        usable |= KeyCapabilities.Disabled;
+                        break;
                 }
             }
         }

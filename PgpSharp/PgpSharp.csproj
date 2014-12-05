@@ -56,6 +56,7 @@
     <Compile Include="GnuPG\TempFileStream.cs" />
     <Compile Include="IPgpTool.cs" />
     <Compile Include="DataOperation.cs" />
+    <Compile Include="KeyCapabilities.cs" />
     <Compile Include="KeyId.cs" />
     <Compile Include="KeyTarget.cs" />
     <Compile Include="PgpException.cs" />

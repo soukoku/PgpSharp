@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PgpSharp.GnuPG;
 
-namespace PgpSharp
+namespace PgpSharp.GnuPG
 {
     [TestClass]
     public class RedirectedProcessTests

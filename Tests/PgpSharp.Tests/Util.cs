@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security;
 using System.Text;
 
-namespace PgpSharp.GnuPG
+namespace PgpSharp
 {
     /// <summary>
     /// Contains small methods for setting up tests.
