@@ -178,6 +178,10 @@ namespace PgpSharp.GnuPG
                 args = "--fixed-list-mode --with-colons --with-fingerprint --list-secret-keys";
                 keyHead = "sec";
             }
+            if (!string.IsNullOrWhiteSpace(KeyringFolder))
+            {
+                args += string.Format(" --homedir \"{0}\" ", KeyringFolder);
+            }
 
             using (var proc = new RedirectedProcess(GnuPGConfig.GnuPGExePath, args))
             {
@@ -227,6 +231,12 @@ namespace PgpSharp.GnuPG
             }
         }
 
+        /// <summary>
+        /// Parses the key capability field from list keys command.
+        /// </summary>
+        /// <param name="field">The field.</param>
+        /// <param name="allowed">The allowed.</param>
+        /// <param name="usable">The usable.</param>
         static void ParseKeyCapField(string field, ref KeyCapabilities allowed, ref KeyCapabilities usable)
         {
             foreach (char c in field)
