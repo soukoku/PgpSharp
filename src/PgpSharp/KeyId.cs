@@ -75,7 +75,7 @@ namespace PgpSharp
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static implicit operator string(KeyId keyId)
+        public static implicit operator string (KeyId keyId)
         {
             if (keyId == null) { return null; }
             return keyId.ToString();
@@ -89,7 +89,7 @@ namespace PgpSharp
         /// </returns>
         public override string ToString()
         {
-            return Id;
+            return string.Format("{0} ({1})", UserIds.FirstOrDefault(), Id);
         }
     }
 }

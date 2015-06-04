@@ -17,7 +17,8 @@ namespace PgpSharp.GnuPG
         /// </summary>
         public const string GnuPGExePathKey = "pgpsharp:GnuPGExePath";
 
-        private static string __gpgExePath = TryFindGpgPath();
+        static readonly string __defaultGpgExePath = TryFindGpgPath();
+        static string __gpgExePath;
 
         /// <summary>
         /// Gets or sets the GPG executable path.
@@ -27,7 +28,7 @@ namespace PgpSharp.GnuPG
         /// </value>
         public static string GnuPGExePath
         {
-            get { return __gpgExePath; }
+            get { return string.IsNullOrEmpty(__gpgExePath) ? __defaultGpgExePath : __gpgExePath; }
             set
             {
                 if (File.Exists(value))

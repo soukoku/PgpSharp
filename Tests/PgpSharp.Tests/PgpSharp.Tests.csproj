@@ -68,7 +68,7 @@
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PgpSharp\PgpSharp.csproj">
+    <ProjectReference Include="..\..\src\PgpSharp\PgpSharp.csproj">
       <Project>{3bc39b3d-b478-41c8-865d-72dbc39143a0}</Project>
       <Name>PgpSharp</Name>
     </ProjectReference>
