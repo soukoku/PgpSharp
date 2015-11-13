@@ -45,6 +45,7 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Content="Exe path" Target="{Binding ElementName=exePath}"></Label>
@@ -65,5 +66,8 @@
         <Label Grid.Row="4" Content="Passphrase" Target="{Binding ElementName=passphrase}"></Label>
         <PasswordBox Grid.Row="4" Grid.Column="1" x:Name="passphrase" VerticalAlignment="Center"></PasswordBox>
         <Button Grid.Row="4" Grid.Column="2" x:Name="btnDecrypt" Content="Decrypt file with secret..." Click="btnDecrypt_Click"></Button>
+
+        <CheckBox Grid.Row="5" Grid.Column="1" Content="Always trust public key" x:Name="trustPubKey"
+                  Margin="4"></CheckBox>
     </Grid>
 </Window>

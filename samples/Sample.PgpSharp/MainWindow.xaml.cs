@@ -127,6 +127,7 @@ namespace Sample.PgpSharp
                     var encryptArg = new FileDataInput
                     {
                         Armor = true,
+                        AlwaysTrustPublicKey = trustPubKey.IsChecked.GetValueOrDefault(),
                         InputFile = srcFile,
                         OutputFile = outFile,
                         Operation = DataOperation.Encrypt,
@@ -180,7 +181,7 @@ namespace Sample.PgpSharp
                             }
                         }
 
-                        var encryptArg = new FileDataInput
+                        var decryptArg = new FileDataInput
                         {
                             InputFile = srcFile,
                             OutputFile = outFile,
@@ -189,7 +190,7 @@ namespace Sample.PgpSharp
                         };
                         try
                         {
-                            _tool.ProcessData(encryptArg);
+                            _tool.ProcessData(decryptArg);
                             SelectFileInExplorer(outFile);
                         }
                         catch (Exception ex)

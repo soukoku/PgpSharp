@@ -14,6 +14,6 @@ namespace PgpSharp
         // keep this same in major releases
         public const string MajorVersion = "0.1.0.0";
         // change this for each nuget release
-        public const string BuildVersion = "0.1.4.0";
+        public const string BuildVersion = "0.1.5.0";
     }
 }
