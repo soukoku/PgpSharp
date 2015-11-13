@@ -50,6 +50,7 @@ namespace PgpSharp.GnuPG
             var encryptArg = new FileDataInput
             {
                 Armor = true,
+                AlwaysTrustPublicKey = false,
                 InputFile = origFile,
                 OutputFile = encryptedFile,
                 Operation = DataOperation.Encrypt,
@@ -90,6 +91,7 @@ namespace PgpSharp.GnuPG
             var encryptArg = new FileDataInput
             {
                 Armor = true,
+                AlwaysTrustPublicKey = false,
                 InputFile = origFile,
                 OutputFile = encryptedFile,
                 Operation = DataOperation.Encrypt,
@@ -129,6 +131,7 @@ namespace PgpSharp.GnuPG
                 var encryptArg = new StreamDataInput
                 {
                     Armor = true,
+                    AlwaysTrustPublicKey = false,
                     InputData = origFs,
                     Operation = DataOperation.Encrypt,
                     Recipient = TESTER_NAME,
@@ -164,6 +167,7 @@ namespace PgpSharp.GnuPG
                 var encryptArg = new StreamDataInput
                 {
                     Armor = true,
+                    AlwaysTrustPublicKey = false,
                     InputData = origFs,
                     Operation = DataOperation.Encrypt,
                     Recipient = TESTER_NAME,

@@ -53,6 +53,7 @@ namespace PgpSharp.GnuPG
                 var newArg = new FileDataInput
                 {
                     Armor = input.Armor,
+                    AlwaysTrustPublicKey = input.AlwaysTrustPublicKey,
                     InputFile = tempInFile,
                     Operation = input.Operation,
                     Originator = input.Originator,
@@ -117,6 +118,12 @@ namespace PgpSharp.GnuPG
             {
                 args.Append("-a ");
             }
+            
+            if (input.AlwaysTrustPublicKey)
+            {
+                args.Append("--always-trust ");
+            }
+
             if (!string.IsNullOrWhiteSpace(KeyringFolder))
             {
                 args.AppendFormat("--homedir \"{0}\" ", KeyringFolder);

@@ -46,6 +46,15 @@ namespace PgpSharp
         public bool Armor { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating the public key should always be trusted.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> to always trust the public key; otherwise, <c>false</c>.
+        /// </value>
+        public bool AlwaysTrustPublicKey { get; set; }
+       
+
+        /// <summary>
         /// Gets or sets the passphrase if the operation. Required to sign and decrypt.
         /// </summary>
         /// <value>
