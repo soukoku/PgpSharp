@@ -7,9 +7,9 @@ using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace PgpSharp.GnuPG
+namespace PgpSharp.IO
 {
-    static class IOUtility
+    public static class IOUtility
     {
         /// <summary>
         /// Writes the <see cref="SecureString"/> char-by-char to the specified input.
@@ -39,6 +39,10 @@ namespace PgpSharp.GnuPG
             }
         }
 
+        /// <summary>
+        /// Deletes the specified files.
+        /// </summary>
+        /// <param name="files"></param>
         public static void DeleteFiles(params string[] files)
         {
             if (files != null)

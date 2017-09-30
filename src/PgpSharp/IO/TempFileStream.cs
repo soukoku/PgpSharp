@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace PgpSharp.GnuPG
+namespace PgpSharp.IO
 {
     /// <summary>
     /// A read-only file stream that will delete the underlying file when disposed.
     /// </summary>
-    class TempFileStream : Stream
+    public sealed class TempFileStream : Stream
     {
         string _filePath;
         Stream _stream;

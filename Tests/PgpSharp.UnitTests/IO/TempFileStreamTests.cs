@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 
-namespace PgpSharp.GnuPG
+namespace PgpSharp.IO
 {
     [TestClass]
     public class TempFileStreamTests

@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using System.Security;
 
-namespace PgpSharp.GnuPG
+namespace PgpSharp.IO
 {
     [TestClass]
     public class IOUtilityTests

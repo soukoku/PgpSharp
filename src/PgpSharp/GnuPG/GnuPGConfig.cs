@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace PgpSharp.GnuPG
 {
@@ -45,31 +43,21 @@ namespace PgpSharp.GnuPG
 
             if (!File.Exists(exe))
             {
-                var folder = GetDefaultGpgInstallFolder();
-
-                exe = Path.Combine(folder, "gpg2.exe");
-                if (!File.Exists(exe))
+                var folders = new[]
                 {
-                    exe = Path.Combine(folder, "gpg.exe");
-                    if (!File.Exists(exe))
-                    {
-                        return null;
-                    }
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "GnuPG\\bin"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Gnu\\GnuPG"),
+                    Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles(x86)"), "GnuPG\\bin"),
+                    Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles(x86)"), "Gnu\\GnuPG")
+                };
+
+                exe = folders.Select(fdr => Path.Combine(fdr, "gpg.exe")).FirstOrDefault(f => File.Exists(f));
+                if (exe == null)
+                {
+                    exe = folders.Select(fdr => Path.Combine(fdr, "gpg2.exe")).FirstOrDefault(f => File.Exists(f));
                 }
             }
             return exe;
         }
-
-        private static string GetDefaultGpgInstallFolder()
-        {
-            var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Gnu\\GnuPG");
-            if (IntPtr.Size == 8 && !Directory.Exists(folder))
-            {
-                // try x86 version on 64bit OS
-                folder = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles(x86)"), "Gnu\\GnuPG");
-            }
-            return folder;
-        }
-
     }
 }

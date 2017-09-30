@@ -19,7 +19,10 @@ namespace PgpSharp
         /// <param name="allowedCapability">The allowed capability.</param>
         /// <param name="usableCapability">The usable capability.</param>
         /// <param name="userIds">The user ids.</param>
-        public KeyId(string keyId, string fingerprint, KeyCapabilities allowedCapability, KeyCapabilities usableCapability, IEnumerable<string> userIds)
+        public KeyId(string keyId, string fingerprint, 
+            KeyCapabilities allowedCapability, 
+            KeyCapabilities usableCapability, 
+            IEnumerable<string> userIds)
         {
             Id = keyId;
             Fingerprint = fingerprint;
@@ -34,7 +37,7 @@ namespace PgpSharp
         /// <value>
         /// The key id.
         /// </value>
-        public string Id { get; set; }
+        public string Id { get; private set; }
 
         /// <summary>
         /// Gets the associated user ids.
@@ -75,11 +78,7 @@ namespace PgpSharp
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static implicit operator string (KeyId keyId)
-        {
-            if (keyId == null) { return null; }
-            return keyId.ToString();
-        }
+        public static implicit operator string(KeyId keyId) => keyId?.ToString();
 
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
@@ -87,9 +86,6 @@ namespace PgpSharp
         /// <returns>
         /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
-        public override string ToString()
-        {
-            return string.Format("{0} ({1})", UserIds.FirstOrDefault(), Id);
-        }
+        public override string ToString() => $"{UserIds.FirstOrDefault()} ({Id})";
     }
 }

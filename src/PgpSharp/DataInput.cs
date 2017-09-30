@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Security;
-using System.Text;
 
 namespace PgpSharp
 {
@@ -38,7 +33,7 @@ namespace PgpSharp
         public string Recipient { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating the output should be ASCII armored.
+        /// Gets or sets a value indicating whether the output should be ASCII armored.
         /// </summary>
         /// <value>
         ///   <c>true</c> to armorize; otherwise, <c>false</c>.
@@ -55,7 +50,7 @@ namespace PgpSharp
        
 
         /// <summary>
-        /// Gets or sets the passphrase if the operation. Required to sign and decrypt.
+        /// Gets or sets the passphrase for the operation. Required to sign and decrypt.
         /// </summary>
         /// <value>
         /// The passphrase.
@@ -74,9 +69,9 @@ namespace PgpSharp
             {
                 switch (Operation)
                 {
-                    case PgpSharp.DataOperation.Decrypt:
-                    case PgpSharp.DataOperation.SignAndEncrypt:
-                    case PgpSharp.DataOperation.Sign:
+                    case DataOperation.Decrypt:
+                    case DataOperation.SignAndEncrypt:
+                    case DataOperation.Sign:
                     case DataOperation.ClearSign:
                         return true;
                 }
@@ -109,7 +104,7 @@ namespace PgpSharp
                     RequirePasspharse();
                     break;
                 default:
-                    throw new PgpException(string.Format(CultureInfo.InvariantCulture, "Unknown operation {0}.", Operation));
+                    throw new PgpException($"Unknown operation {Operation}.");
             }
         }
 
@@ -117,7 +112,7 @@ namespace PgpSharp
         {
             if (Passphrase == null || Passphrase.Length == 0)
             {
-                throw new PgpException(string.Format(CultureInfo.InvariantCulture, "Passphrase is required for {0} operation.", Operation));
+                throw new PgpException($"Passphrase is required for {Operation} operation.");
             }
         }
 
@@ -125,7 +120,7 @@ namespace PgpSharp
         {
             if (string.IsNullOrEmpty(Originator))
             {
-                throw new PgpException(string.Format(CultureInfo.InvariantCulture, "Originator is required for {0} operation.", Operation));
+                throw new PgpException($"Originator is required for {Operation} operation.");
             }
         }
 
@@ -133,7 +128,7 @@ namespace PgpSharp
         {
             if (string.IsNullOrEmpty(Recipient))
             {
-                throw new PgpException(string.Format(CultureInfo.InvariantCulture, "Recipient is required for {0} operation.", Operation));
+                throw new PgpException($"Recipient is required for {Operation} operation.");
             }
         }
     }

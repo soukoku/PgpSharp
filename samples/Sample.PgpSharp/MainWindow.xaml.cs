@@ -1,23 +1,11 @@
-﻿using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using ModernWpf.Messages;
 using PgpSharp;
 using PgpSharp.GnuPG;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Sample.PgpSharp
 {
@@ -37,47 +25,36 @@ namespace Sample.PgpSharp
 
         private void btnChooseKeyring_Click(object sender, RoutedEventArgs e)
         {
-            using (var dlg = new CommonOpenFileDialog())
+            var msg = new ChooseFolderMessage(newPath => keyringPath.Text = newPath)
             {
-                dlg.Title = "Choose Keyring Folder";
-                dlg.IsFolderPicker = true;
-
-                dlg.AddToMostRecentlyUsedList = false;
-                dlg.AllowNonFileSystemItems = false;
-                dlg.EnsureFileExists = true;
-                dlg.EnsurePathExists = true;
-                dlg.EnsureReadOnly = false;
-                dlg.EnsureValidNames = true;
-                dlg.Multiselect = false;
-                dlg.ShowPlacesList = true;
-                var oldPath = keyringPath.Text;
-                if (File.Exists(oldPath))
-                {
-                    dlg.InitialDirectory = System.IO.Path.GetDirectoryName(oldPath);
-                }
-                if (dlg.ShowDialog(this) == CommonFileDialogResult.Ok)
-                {
-                    keyringPath.Text = dlg.FileName;
-                }
+                Caption = "Choose Keyring Folder"
+            };
+            var oldPath = keyringPath.Text;
+            if (Directory.Exists(oldPath))
+            {
+                msg.InitialFolder = System.IO.Path.GetDirectoryName(oldPath);
             }
+            msg.HandleWithPlatform(this);
+
         }
 
         private void btnChooseExe_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = "Choose GnuPG exe file";
-            ofd.Multiselect = false;
-            ofd.Filter = "exe files|*.exe";
+            var msg = new ChooseFileMessage(newFiles => exePath.Text = newFiles.First())
+            {
+                Caption = "Choose GnuPG exe file",
+                Filters = "GnuPG exe file|gpg*.exe",
+                Purpose = FilePurpose.OpenSingle,
+            };
+
             var oldPath = exePath.Text;
             if (File.Exists(oldPath))
             {
-                ofd.FileName = System.IO.Path.GetFileName(oldPath);
-                ofd.InitialDirectory = System.IO.Path.GetDirectoryName(oldPath);
+                msg.InitialFileName = System.IO.Path.GetFileName(oldPath);
+                msg.InitialFolder = System.IO.Path.GetDirectoryName(oldPath);
             }
-            if (ofd.ShowDialog(this).GetValueOrDefault())
-            {
-                exePath.Text = ofd.FileName;
-            }
+
+            msg.HandleWithPlatform(this);
         }
 
         private void exePath_TextChanged(object sender, TextChangedEventArgs e)
@@ -115,13 +92,9 @@ namespace Sample.PgpSharp
             }
             else
             {
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.Title = "Choose file to encrypt";
-                ofd.Multiselect = false;
-                ofd.Filter = "All files|*.*";
-                if (ofd.ShowDialog(this).GetValueOrDefault())
+                var msg = new ChooseFileMessage(newFiles =>
                 {
-                    var srcFile = ofd.FileName;
+                    var srcFile = newFiles.First();
                     var outFile = srcFile + ".encrypted.txt";
 
                     var encryptArg = new FileDataInput
@@ -142,7 +115,14 @@ namespace Sample.PgpSharp
                     {
                         MessageBox.Show("Failed to encrypt: " + ex.Message);
                     }
-                }
+                })
+                {
+                    Caption = "Choose file to encrypt",
+                    Filters = "All files|*.*",
+                    Purpose = FilePurpose.OpenSingle,
+                };
+
+                msg.HandleWithPlatform(this);
             }
         }
 
@@ -163,13 +143,9 @@ namespace Sample.PgpSharp
                 }
                 else
                 {
-                    OpenFileDialog ofd = new OpenFileDialog();
-                    ofd.Title = "Choose file to decrypt";
-                    ofd.Multiselect = false;
-                    ofd.Filter = "All files|*.*";
-                    if (ofd.ShowDialog(this).GetValueOrDefault())
+                    var msg = new ChooseFileMessage(newFiles =>
                     {
-                        var srcFile = ofd.FileName;
+                        var srcFile = newFiles.First();
                         var outFile = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(srcFile),
                             System.IO.Path.GetFileNameWithoutExtension(srcFile) + ".decrypted" + System.IO.Path.GetExtension(srcFile));
 
@@ -197,7 +173,14 @@ namespace Sample.PgpSharp
                         {
                             MessageBox.Show("Failed to decrypt: " + ex.Message);
                         }
-                    }
+                    })
+                    {
+                        Caption = "Choose file to decrypt",
+                        Filters = "All files|*.*",
+                        Purpose = FilePurpose.OpenSingle,
+                    };
+
+                    msg.HandleWithPlatform(this);
                 }
             }
 
@@ -205,7 +188,7 @@ namespace Sample.PgpSharp
 
         private void SelectFileInExplorer(string outFile)
         {
-            using (Process.Start("explorer", string.Format("/select,{0}", outFile))) { }
+            new OpenExplorerMessage { SelectedPath = outFile }.HandleWithPlatform();
         }
     }
 }

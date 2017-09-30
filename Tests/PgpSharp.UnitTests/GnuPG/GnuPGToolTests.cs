@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Security;
 using System.Linq;
+using PgpSharp.IO;
 
 namespace PgpSharp.GnuPG
 {
