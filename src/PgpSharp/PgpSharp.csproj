@@ -1,31 +1,38 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net40</TargetFrameworks>
-    <Company>Yin-Chun Wang</Company>
-    <Copyright>Copyright © Yin-Chun Wang 2014</Copyright>
+    <TargetFrameworks>netstandard2.0;net40;net5.0</TargetFrameworks>
+    <Authors>Yin-Chun Wang</Authors>
+    <Copyright>Copyright © Yin-Chun Wang 2014-2021</Copyright>
     <Description>Defines basic pgp operations for dotnet with a sample implementation using GnuPG command line.</Description>
     <PackageProjectUrl>https://github.com/soukoku/pgpsharp</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/soukoku/pgpsharp/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/soukoku/gpgsharp</RepositoryUrl>
+    <RepositoryType>GIT</RepositoryType>
     <PackageTags>pgp openpgp gpg</PackageTags>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Sign.snk</AssemblyOriginatorKeyFile>
+    <AssemblyVersion>0.2.0.0</AssemblyVersion>
+    <Version>0.2.0</Version>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net40'">
-    <DocumentationFile>bin\Debug\net40\PgpSharp.xml</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-    <DocumentationFile>bin\Debug\netstandard2.0\PgpSharp.xml</DocumentationFile>
-  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <Reference Include="System.Configuration"></Reference>
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Configuration.ConfigurationManager">
-      <Version>4.4.0</Version>
-    </PackageReference>
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0"></PackageReference>
   </ItemGroup>
 
 </Project>
