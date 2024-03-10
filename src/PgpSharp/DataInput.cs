@@ -32,7 +32,7 @@ public abstract class DataInput
     /// Gets or sets a value indicating the public key should always be trusted.
     /// </summary>
     public bool AlwaysTrustPublicKey { get; set; }
-       
+
 
     /// <summary>
     /// Gets or sets the passphrase for the operation. Required to sign and decrypt.
@@ -40,51 +40,37 @@ public abstract class DataInput
     public SecureString? Passphrase { get; set; }
 
     /// <summary>
-    /// Gets a value indicating whether a passphrase is required for the specified <see cref="Operation"/>.
+    /// Whether a passphrase is required for the current <see cref="Operation"/>.
     /// </summary>
-    public bool NeedsPassphrase
-    {
-        get
-        {
-            switch (Operation)
-            {
-                case DataOperation.Decrypt:
-                case DataOperation.SignAndEncrypt:
-                case DataOperation.Sign:
-                case DataOperation.ClearSign:
-                    return true;
-            }
-            return false;
-        }
-    }
+    public bool NeedsPassphrase =>
+        Operation.HasFlag(DataOperation.Decrypt) ||
+        Operation.HasFlag(DataOperation.Sign) ||
+        Operation.HasFlag(DataOperation.ClearSign) ||
+        Operation.HasFlag(DataOperation.DetachSign);
 
     /// <summary>
-    /// Verifies this input for requirements.
+    /// Whether recipient is required for the current <see cref="Operation"/>.
+    /// </summary>
+    public bool NeedsRecipient => Operation.HasFlag(DataOperation.Encrypt);
+
+    /// <summary>
+    /// Whether originator is required for the current <see cref="Operation"/>.
+    /// </summary>
+    public bool NeedsOriginator =>
+        Operation.HasFlag(DataOperation.Sign) ||
+        Operation.HasFlag(DataOperation.ClearSign) ||
+        Operation.HasFlag(DataOperation.DetachSign);
+
+    /// <summary>
+    /// Checks this input for requirements.
     /// </summary>
     /// <exception cref="PgpSharp.PgpException"></exception>
-    public virtual void Verify()
+    public virtual void CheckRequirements()
     {
-        switch (Operation)
-        {
-            case DataOperation.Decrypt:
-                RequirePasspharse();
-                break;
-            case DataOperation.Encrypt:
-                RequireRecipient();
-                break;
-            case DataOperation.Sign:
-            case DataOperation.ClearSign:
-                RequireOriginator();
-                RequirePasspharse();
-                break;
-            case DataOperation.SignAndEncrypt:
-                RequireOriginator();
-                RequireRecipient();
-                RequirePasspharse();
-                break;
-            default:
-                throw new PgpException($"Unknown operation {Operation}.");
-        }
+        if (Operation <= DataOperation.Invalid) throw new PgpException("No operation specified.");
+        if (NeedsPassphrase) RequirePasspharse();
+        if (NeedsRecipient) RequireRecipient();
+        if (NeedsOriginator) RequireOriginator();
     }
 
     private void RequirePasspharse()
@@ -112,30 +98,30 @@ public abstract class DataInput
     }
 }
 
-/// <summary>
-/// Input object for processing a stream.
-/// </summary>
-public class StreamDataInput : DataInput
-{
-    /// <summary>
-    /// Gets or sets the input data stream.
-    /// </summary>
-    public Stream? InputData { get; set; }
-
-    /// <summary>
-    /// Verifies this input for requirements.
-    /// </summary>
-    /// <exception cref="PgpSharp.PgpException">Input data is required.</exception>
-    public override void Verify()
-    {
-        if (InputData == null)
-        {
-            throw new PgpException("Input data is required.");
-        }
-
-        base.Verify();
-    }
-}
+// /// <summary>
+// /// Input object for processing a stream.
+// /// </summary>
+// public class StreamDataInput : DataInput
+// {
+//     /// <summary>
+//     /// Gets or sets the input data stream.
+//     /// </summary>
+//     public Stream? InputData { get; set; }
+//
+//     /// <summary>
+//     /// Checks this input for requirements.
+//     /// </summary>
+//     /// <exception cref="PgpSharp.PgpException">Input data is required.</exception>
+//     public override void CheckRequirements()
+//     {
+//         if (InputData == null)
+//         {
+//             throw new PgpException("Input data is required.");
+//         }
+//
+//         base.CheckRequirements();
+//     }
+// }
 
 /// <summary>
 /// Input object for processing a file.
@@ -153,24 +139,26 @@ public class FileDataInput : DataInput
     public string? OutputFile { get; set; }
 
     /// <summary>
-    /// Verifies this input for requirements.
+    /// Checks this input for requirements.
     /// </summary>
     /// <exception cref="PgpSharp.PgpException">
     /// Input file is required.
     /// or
     /// Output file is required.
     /// </exception>
-    public override void Verify()
+    public override void CheckRequirements()
     {
         if (string.IsNullOrEmpty(InputFile))
         {
             throw new PgpException("Input file is required.");
         }
+
         if (string.IsNullOrEmpty(OutputFile))
         {
-            throw new PgpException("Output file is required.");
+            if (!Operation.HasFlag(DataOperation.Verify))
+                throw new PgpException("Output file is required.");
         }
 
-        base.Verify();
+        base.CheckRequirements();
     }
 }

@@ -13,7 +13,7 @@ Install-Package PgpSharp
 
 # Using the lib
 The main interface to use is IPgpTool. The lib provides a default
-impelementation that merely wraps around the [GnuPG](https://gnupg.org/) 
+impelementation that merely wraps around the [GnuPG2](https://gnupg.org/) 
 binary for windows and can be instantiated like this:
 
 ```cs

@@ -17,66 +17,66 @@ public class GpgTool : IPgpTool
     {
         _config = config;
     }
-        
-        
+
+
     #region IPgpTool Members
 
-    /// <summary>
-    /// Gets or sets a different keyring folder than default.
-    /// </summary>
-    public string KeyringFolder { get; set; }
-
-    /// <summary>
-    /// Processes data with stream input.
-    /// </summary>
-    /// <param name="input">The input.</param>
-    /// <returns>
-    /// Output stream.
-    /// </returns>
-    /// <exception cref="System.ArgumentNullException">input</exception>
-    /// <exception cref="PgpException"></exception>
-    public Stream ProcessData(StreamDataInput input)
-    {
-        if (input == null) { throw new ArgumentNullException("input"); }
-        input.Verify();
-
-        // only way to reliably make this work is save to file and process it instead.
-        string tempInFile = null;
-        string tempOutFile = null;
-        try
-        {
-            tempInFile = Path.GetTempFileName();
-            tempOutFile = Path.GetTempFileName();
-
-            using (var fs = File.OpenWrite(tempInFile))
-            {
-                input.InputData.CopyTo(fs);
-            }
-            var newArg = new FileDataInput
-            {
-                Armor = input.Armor,
-                AlwaysTrustPublicKey = input.AlwaysTrustPublicKey,
-                InputFile = tempInFile,
-                Operation = input.Operation,
-                Originator = input.Originator,
-                OutputFile = tempOutFile,
-                Passphrase = input.Passphrase,
-                Recipient = input.Recipient
-            };
-            ProcessData(newArg);
-            return new FileStream(tempOutFile, FileMode.Open, FileAccess.Read, FileShare.None, 4096,
-                FileOptions.DeleteOnClose);
-        }
-        catch
-        {
-            IOExtensions.DeleteFiles(tempOutFile);
-            throw;
-        }
-        finally
-        {
-            IOExtensions.DeleteFiles(tempInFile);
-        }
-    }
+    // /// <summary>
+    // /// Processes data with stream input.
+    // /// </summary>
+    // /// <param name="input">The input.</param>
+    // /// <returns>
+    // /// Output stream.
+    // /// </returns>
+    // /// <exception cref="System.ArgumentNullException">input</exception>
+    // /// <exception cref="PgpException"></exception>
+    // public Stream ProcessData(StreamDataInput input)
+    // {
+    //     if (input == null)
+    //     {
+    //         throw new ArgumentNullException("input");
+    //     }
+    //
+    //     input.CheckRequirements();
+    //
+    //     // only way to reliably make this work is save to file and process it instead.
+    //     string tempInFile = null;
+    //     string tempOutFile = null;
+    //     try
+    //     {
+    //         tempInFile = Path.GetTempFileName();
+    //         tempOutFile = Path.GetTempFileName();
+    //
+    //         using (var fs = File.OpenWrite(tempInFile))
+    //         {
+    //             input.InputData.CopyTo(fs);
+    //         }
+    //
+    //         var newArg = new FileDataInput
+    //         {
+    //             Armor = input.Armor,
+    //             AlwaysTrustPublicKey = input.AlwaysTrustPublicKey,
+    //             InputFile = tempInFile,
+    //             Operation = input.Operation,
+    //             Originator = input.Originator,
+    //             OutputFile = tempOutFile,
+    //             Passphrase = input.Passphrase,
+    //             Recipient = input.Recipient
+    //         };
+    //         ProcessData(newArg);
+    //         return new FileStream(tempOutFile, FileMode.Open, FileAccess.Read, FileShare.None, 4096,
+    //             FileOptions.DeleteOnClose);
+    //     }
+    //     catch
+    //     {
+    //         IOExtensions.DeleteFiles(tempOutFile);
+    //         throw;
+    //     }
+    //     finally
+    //     {
+    //         IOExtensions.DeleteFiles(tempInFile);
+    //     }
+    // }
 
     /// <summary>
     /// Processes data with file input.
@@ -86,8 +86,12 @@ public class GpgTool : IPgpTool
     /// <exception cref="PgpException"></exception>
     public void ProcessData(FileDataInput input)
     {
-        if (input == null) { throw new ArgumentNullException("input"); }
-        input.Verify();
+        if (input == null)
+        {
+            throw new ArgumentNullException("input");
+        }
+
+        input.CheckRequirements();
         using (var proc = new RedirectedProcess(_config.GpgPath, CreateDataCommandLineArgs(input)))
         {
             if (proc.Start())
@@ -98,6 +102,7 @@ public class GpgTool : IPgpTool
                     proc.Input.Write(Environment.NewLine);
                     proc.Input.Flush();
                 }
+
                 proc.WaitForExit();
 
                 Debug.WriteLine("gpg output: " + proc.Output);
@@ -116,50 +121,65 @@ public class GpgTool : IPgpTool
     string CreateDataCommandLineArgs(DataInput input)
     {
         // yes to all confirmations, batch for no prompt
-        StringBuilder args = new StringBuilder("--yes --batch ");
+        StringBuilder args = new StringBuilder("--yes --batch --no-greeting ");
         if (input.Armor)
         {
             args.Append("-a ");
         }
-            
+
         if (input.AlwaysTrustPublicKey)
         {
-            args.Append("--always-trust ");
+            // args.Append("--always-trust ");
+            args.Append("--trust-model always ");
         }
 
-        if (!string.IsNullOrWhiteSpace(KeyringFolder))
+        if (!string.IsNullOrWhiteSpace(_config.KeyringFolder))
         {
-            args.AppendFormat("--homedir \"{0}\" ", KeyringFolder);
+            args.AppendFormat("--homedir \"{0}\" ", _config.KeyringFolder);
         }
-        switch (input.Operation)
+
+        // only supports 4 main operations here
+        if (input.Operation.HasFlag(DataOperation.Encrypt))
         {
-            case DataOperation.Decrypt:
-                // [d]ecrypt
-                args.Append("-d ");
-                break;
-            case DataOperation.Encrypt:
-                // [e]ncrypt for [r]ecipient
-                args.AppendFormat("-e -r \"{0}\" ", input.Recipient);
-                break;
-            case DataOperation.Sign:
-                // [s]ign for [u]ser
-                args.AppendFormat("-s -u \"{0}\" ", input.Originator);
-                break;
-            case DataOperation.ClearSign:
-                args.AppendFormat("--clearsign -u \"{0}\" ", input.Originator);
-                break;
-            case DataOperation.SignAndEncrypt:
-                args.AppendFormat("-se -r \"{0}\" -u \"{1}\" ", input.Recipient, input.Originator);
-                break;
-            //case DataOperation.Verify:
-            //    args.Append("--verify ");
-            //    break;
+            args.Append("--encrypt ");
+
+            if (input.Operation.HasFlag(DataOperation.Sign))
+            {
+                args.Append("--sign ");
+            }
+            else if (input.Operation.HasFlag(DataOperation.ClearSign))
+            {
+                args.Append("--clearsign ");
+            }
+        }
+        else if (input.Operation.HasFlag(DataOperation.Decrypt))
+        {
+            args.Append("--decrypt ");
+        }
+        else if (input.Operation.HasFlag(DataOperation.Verify))
+        {
+            args.Append("--verify ");
+        }
+        else if (input.Operation.HasFlag(DataOperation.DetachSign))
+        {
+            args.Append("--detach-sign ");
+        }
+
+        if (input.NeedsRecipient)
+        {
+            args.AppendFormat("-r \"{0}\" ", input.Recipient);
+        }
+
+        if (input.NeedsOriginator)
+        {
+            args.AppendFormat("-u \"{0}\" ", input.Originator);
         }
 
         if (input.NeedsPassphrase)
         {
             // will enter passphrase via std in
-            args.Append("--passphrase-fd 0 ");
+            // args.Append("--passphrase-fd 0 ");
+            args.Append("--pinentry-mode loopback --passphrase-fd 0 ");
         }
 
         var fileInput = input as FileDataInput;
@@ -188,9 +208,10 @@ public class GpgTool : IPgpTool
             args = "--fixed-list-mode --with-colons --with-fingerprint --list-secret-keys";
             keyHead = "sec";
         }
-        if (!string.IsNullOrWhiteSpace(KeyringFolder))
+
+        if (!string.IsNullOrWhiteSpace(_config.KeyringFolder))
         {
-            args += string.Format(" --homedir \"{0}\" ", KeyringFolder);
+            args += string.Format(" --homedir \"{0}\" ", _config.KeyringFolder);
         }
 
         using (var proc = new RedirectedProcess(_config.GpgPath, args))
@@ -223,6 +244,7 @@ public class GpgTool : IPgpTool
                                 i--;
                                 break;
                             }
+
                             switch (fields[0])
                             {
                                 case "uid":

@@ -32,6 +32,11 @@ public class GpgOptions
         }
     }
 
+    /// <summary>
+    /// Gets or sets a different keyring folder than default.
+    /// </summary>
+    public string? KeyringFolder { get; set; }
+
     private static string? TryFindGpgPath()
     {
         // search typical gpg install folder
