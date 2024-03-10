@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace PgpSharp.GnuPG;
+namespace PgpSharp.Gpg;
 
 /// <summary>
 /// Implements <see cref="IPgpTool"/> as a gnupg cli wrapper.
@@ -88,17 +88,19 @@ public class GpgTool : IPgpTool
     {
         if (input == null)
         {
-            throw new ArgumentNullException("input");
+            throw new ArgumentNullException(nameof(input));
         }
 
         input.CheckRequirements();
-        using (var proc = new RedirectedProcess(_config.GpgPath, CreateDataCommandLineArgs(input)))
+        _config.Validate();
+        
+        using (var proc = new RedirectedProcess(_config.GpgPath!, CreateDataCommandLineArgs(input)))
         {
             if (proc.Start())
             {
                 if (input.NeedsPassphrase)
                 {
-                    proc.Input.WriteSecret(input.Passphrase);
+                    proc.Input.WriteSecret(input.Passphrase!);
                     proc.Input.Write(Environment.NewLine);
                     proc.Input.Flush();
                 }
@@ -201,6 +203,8 @@ public class GpgTool : IPgpTool
     /// <returns></returns>
     public IEnumerable<KeyId> ListKeys(KeyTarget target)
     {
+        _config.Validate();
+        
         var args = "--fixed-list-mode --with-colons --with-fingerprint --list-public-keys";
         var keyHead = "pub";
         if (target == KeyTarget.Secret)
@@ -214,7 +218,7 @@ public class GpgTool : IPgpTool
             args += string.Format(" --homedir \"{0}\" ", _config.KeyringFolder);
         }
 
-        using (var proc = new RedirectedProcess(_config.GpgPath, args))
+        using (var proc = new RedirectedProcess(_config.GpgPath!, args))
         {
             if (proc.Start())
             {
@@ -233,8 +237,8 @@ public class GpgTool : IPgpTool
                         i++;
 
                         // read more lines as part of this key
-                        string finger = null;
-                        List<string> users = new List<string>();
+                        string finger = string.Empty;
+                        List<string> users = new();
                         for (; i < lines.Length; i++)
                         {
                             fields = lines[i].Split(':');
@@ -248,7 +252,7 @@ public class GpgTool : IPgpTool
                             switch (fields[0])
                             {
                                 case "uid":
-                                    users.Add(fields[9].DecodeAsciiEscapes());
+                                    users.Add(fields[9].DecodeAsciiEscapes()!);
                                     break;
                                 case "fpr":
                                     finger = fields[9];

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace PgpSharp.GnuPG;
+namespace PgpSharp.Gpg;
 
 /// <summary>
 /// Contains configuration values for using GnuPG.
@@ -60,5 +60,15 @@ public class GpgOptions
         }
 
         return null;
+    }
+
+    public void Validate()
+    {
+        if (!File.Exists(GpgPath))
+            throw new PgpException($"Invalid gpg path '{_gpgExePath}' in the configuration.");
+        if (!string.IsNullOrEmpty(KeyringFolder) && !Directory.Exists(KeyringFolder))
+        {
+            throw new PgpException($"Invalid keyring folder '{KeyringFolder}' in the configuration.");
+        }
     }
 }

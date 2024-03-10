@@ -1,6 +1,6 @@
 using System;
 using PgpSharp;
-using PgpSharp.GnuPG;
+using PgpSharp.Gpg;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

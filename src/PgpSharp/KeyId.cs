@@ -31,7 +31,7 @@ public class KeyId
     /// <summary>
     /// Gets the key id.
     /// </summary>
-    public string Id { get; private set; }
+    public string Id { get; }
 
     /// <summary>
     /// Gets the associated user ids.
@@ -60,7 +60,7 @@ public class KeyId
     /// <returns>
     /// The result of the conversion.
     /// </returns>
-    public static implicit operator string(KeyId keyId) => keyId?.ToString();
+    public static implicit operator string(KeyId keyId) => keyId.ToString();
 
     /// <summary>
     /// Returns a <see cref="System.String" /> that represents this instance.

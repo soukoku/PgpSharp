@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace PgpSharp.GnuPG;
+namespace PgpSharp.Gpg;
 
 /// <summary>
 /// Wraps a process with redirected input/outputs.

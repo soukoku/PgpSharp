@@ -12,7 +12,6 @@
     <PackageProjectUrl>https://github.com/soukoku/pgpsharp</PackageProjectUrl>
     <PackageTags>pgp openpgp gpg</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/soukoku/pgpsharp</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -20,6 +19,7 @@
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../../release-build/strong-name.snk</AssemblyOriginatorKeyFile>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
 
     <LangVersion>12</LangVersion>
     <!--don't warn missing xml docs, naming conventions, and suppressions-->
@@ -36,5 +36,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Readme.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 </Project>
