@@ -24,7 +24,8 @@ public static class GpgServiceExtensions
             configure?.Invoke(options);
             return options;
         });
-        services.AddSingleton<IPgpTool, GpgTool>();
+        services.AddSingleton<GpgTool>();
+        services.AddSingleton<IPgpTool>(svc=>svc.GetRequiredService<GpgTool>());
         return services;
     }
 
@@ -37,7 +38,8 @@ public static class GpgServiceExtensions
     public static IServiceCollection AddGpg(this IServiceCollection services, GpgOptions options)
     {
         services.AddSingleton(options);
-        services.AddSingleton<IPgpTool, GpgTool>();
+        services.AddSingleton<GpgTool>();
+        services.AddSingleton<IPgpTool>(svc=>svc.GetRequiredService<GpgTool>());
         return services;
     }
 }

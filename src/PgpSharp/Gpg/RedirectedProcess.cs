@@ -24,15 +24,20 @@ class RedirectedProcess : IDisposable
         _process.StartInfo.RedirectStandardOutput = true;
         _process.StartInfo.RedirectStandardError = true;
 
-        _process.OutputDataReceived += (s, e) =>
-        {
-            _output.AppendLine(e.Data);
-        };
-        _process.ErrorDataReceived += (s, e) =>
-        {
-            _errors.AppendLine(e.Data);
-        };
+        _process.OutputDataReceived += OnProcessOnOutputDataReceived;
+        _process.ErrorDataReceived += OnProcessOnErrorDataReceived;
     }
+
+    private void OnProcessOnErrorDataReceived(object s, DataReceivedEventArgs e)
+    {
+        _errors.AppendLine(e.Data);
+    }
+
+    private void OnProcessOnOutputDataReceived(object s, DataReceivedEventArgs e)
+    {
+        _output.AppendLine(e.Data);
+    }
+
 
     Process? _process;
     readonly StringBuilder _errors;
@@ -81,7 +86,7 @@ class RedirectedProcess : IDisposable
 
     void CheckDisposed()
     {
-        if (_process == null) { throw new ObjectDisposedException(typeof(RedirectedProcess).Name); }
+        if (_process == null) { throw new ObjectDisposedException(nameof(RedirectedProcess)); }
     }
 
     #region IDisposable Members
@@ -90,6 +95,11 @@ class RedirectedProcess : IDisposable
     {
         if (_process != null)
         {
+            _process.OutputDataReceived -= OnProcessOnOutputDataReceived;
+            _process.ErrorDataReceived -= OnProcessOnErrorDataReceived;
+            // _process.StandardError.Dispose();
+            // _process.StandardOutput.Dispose();
+            _process.StandardInput.Dispose();
             _process.Dispose();
             _process = null;
         }

@@ -11,12 +11,15 @@ namespace PgpSharp.Gpg;
 /// </summary>
 public class GpgTool : IPgpTool
 {
-    private readonly GpgOptions _config;
-
-    public GpgTool(GpgOptions config)
+    public GpgTool(GpgOptions options)
     {
-        _config = config;
+        Options = options;
     }
+
+    /// <summary>
+    /// Gets the options used by this tool.
+    /// </summary>
+    public GpgOptions Options { get; }
 
 
     #region IPgpTool Members
@@ -92,9 +95,9 @@ public class GpgTool : IPgpTool
         }
 
         input.CheckRequirements();
-        _config.Validate();
+        Options.Validate();
         
-        using (var proc = new RedirectedProcess(_config.GpgPath!, CreateDataCommandLineArgs(input)))
+        using (var proc = new RedirectedProcess(Options.GpgPath!, CreateDataCommandLineArgs(input)))
         {
             if (proc.Start())
             {
@@ -135,9 +138,9 @@ public class GpgTool : IPgpTool
             args.Append("--trust-model always ");
         }
 
-        if (!string.IsNullOrWhiteSpace(_config.KeyringFolder))
+        if (!string.IsNullOrWhiteSpace(Options.KeyringFolder))
         {
-            args.AppendFormat("--homedir \"{0}\" ", _config.KeyringFolder);
+            args.AppendFormat("--homedir \"{0}\" ", Options.KeyringFolder);
         }
 
         // only supports 4 main operations here
@@ -203,7 +206,7 @@ public class GpgTool : IPgpTool
     /// <returns></returns>
     public IEnumerable<KeyId> ListKeys(KeyTarget target)
     {
-        _config.Validate();
+        Options.Validate();
         
         var args = "--fixed-list-mode --with-colons --with-fingerprint --list-public-keys";
         var keyHead = "pub";
@@ -213,12 +216,12 @@ public class GpgTool : IPgpTool
             keyHead = "sec";
         }
 
-        if (!string.IsNullOrWhiteSpace(_config.KeyringFolder))
+        if (!string.IsNullOrWhiteSpace(Options.KeyringFolder))
         {
-            args += string.Format(" --homedir \"{0}\" ", _config.KeyringFolder);
+            args += string.Format(" --homedir \"{0}\" ", Options.KeyringFolder);
         }
 
-        using (var proc = new RedirectedProcess(_config.GpgPath!, args))
+        using (var proc = new RedirectedProcess(Options.GpgPath!, args))
         {
             if (proc.Start())
             {
