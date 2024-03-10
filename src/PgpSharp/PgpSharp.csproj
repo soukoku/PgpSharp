@@ -1,38 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net40;net5.0</TargetFrameworks>
-    <Authors>Yin-Chun Wang</Authors>
-    <Copyright>Copyright © Yin-Chun Wang 2014-2021</Copyright>
-    <Description>Defines basic pgp operations for dotnet with a sample implementation using GnuPG command line.</Description>
-    <PackageProjectUrl>https://github.com/soukoku/pgpsharp</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/soukoku/gpgsharp</RepositoryUrl>
-    <RepositoryType>GIT</RepositoryType>
-    <PackageTags>pgp openpgp gpg</PackageTags>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Sign.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>0.2.0.0</AssemblyVersion>
-    <Version>0.2.0</Version>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <TargetFrameworks>net462;net6.0;net8.0</TargetFrameworks>
+    <Copyright>Copyright © Yin-Chun Wang 2014-2024</Copyright>
+    <Description>Provides basic pgp operations for dotnet by wrapping the GnuPG cli.</Description>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
   </ItemGroup>
   
-  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
-    <Reference Include="System.Configuration"></Reference>
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0"></PackageReference>
-  </ItemGroup>
+<!--  <ItemGroup Condition="'$(TargetFramework)' != 'net462'">-->
+<!--  </ItemGroup>-->
 
 </Project>

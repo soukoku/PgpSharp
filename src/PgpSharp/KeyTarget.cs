@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿namespace PgpSharp;
 
-namespace PgpSharp
+/// <summary>
+/// Indicates the key listing target.
+/// </summary>
+public enum KeyTarget
 {
     /// <summary>
-    /// Indicates the key listing target.
+    /// The public keys.
     /// </summary>
-    public enum KeyTarget
-    {
-        /// <summary>
-        /// The public keys.
-        /// </summary>
-        Public,
-        /// <summary>
-        /// The private keys.
-        /// </summary>
-        Secret
-    }
+    Public,
+    /// <summary>
+    /// The private keys.
+    /// </summary>
+    Secret
 }
