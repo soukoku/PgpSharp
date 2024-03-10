@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{1B5070
 	ProjectSection(SolutionItems) = preProject
 		LICENSE.txt = LICENSE.txt
 		Readme.md = Readme.md
+		src\Directory.Build.props = src\Directory.Build.props
+		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A63C854C-085B-4B0E-B4CD-BEE6195ABDCC}"

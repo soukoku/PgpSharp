@@ -14,7 +14,7 @@ public class GpgOptions
     // public const string GnuPGExePathKey = "pgpsharp:GnuPGExePath";
 
     static readonly string? DefaultGpgExePath = TryFindGpgPath();
-        
+
     string? _gpgExePath;
 
     /// <summary>
@@ -45,7 +45,8 @@ public class GpgOptions
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "GnuPG\\bin"),
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Gnu\\GnuPG"),
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "GnuPG\\bin"),
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Gnu\\GnuPG")
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Gnu\\GnuPG"),
+            "/opt/homebrew/bin/"
         };
         var names = new[] { "gpg2.exe", "gpg.exe", "gpg" };
 

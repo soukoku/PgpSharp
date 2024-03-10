@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace PgpSharp;
 
-static class IOExtensions
+public static class IOExtensions
 {
     /// <summary>
     /// Writes the <see cref="SecureString"/> char-by-char to the specified input.
@@ -57,25 +57,29 @@ static class IOExtensions
     /// </summary>
     /// <param name="input">The input.</param>
     /// <returns></returns>
-    public static string DecodeAsciiEscapes(this string input)
+    public static string? DecodeAsciiEscapes(this string? input)
     {
         // modified from http://stackoverflow.com/questions/11584148/how-to-convert-a-string-containing-escape-characters-to-a-string
-
-        var rx = new Regex(@"\\x([0-9A-Fa-f]{2})");
-        MatchCollection matches;
-        if ((matches = rx.Matches(input)).Count > 0) // only do the work if found!
+        if (input != null)
         {
-            var res = new StringBuilder();
-            var pos = 0;
-            foreach (Match m in matches)
+            var rx = new Regex(@"\\x([0-9A-Fa-f]{2})");
+            MatchCollection matches;
+            if ((matches = rx.Matches(input)).Count > 0) // only do the work if found!
             {
-                res.Append(input.Substring(pos, m.Index - pos));
-                pos = m.Index + m.Length;
-                res.Append((char)Convert.ToInt32(m.Groups[1].ToString(), 16));
+                var res = new StringBuilder();
+                var pos = 0;
+                foreach (Match m in matches)
+                {
+                    res.Append(input.Substring(pos, m.Index - pos));
+                    pos = m.Index + m.Length;
+                    res.Append((char)Convert.ToInt32(m.Groups[1].ToString(), 16));
+                }
+
+                res.Append(input.Substring(pos));
+                return res.ToString();
             }
-            res.Append(input.Substring(pos));
-            return res.ToString();
         }
+
         return input;
     }
 }

@@ -4,27 +4,23 @@ using System.Text;
 using System.IO;
 using System.Security;
 
-namespace PgpSharp.IO
+namespace PgpSharp
 {
     [TestClass]
-    public class IOUtilityTests
+    public class IOExtensionsTests
     {
         #region WriteSecret
 
         [TestMethod]
         public void WriteSecret_Should_Ignore_Null_Or_Empty()
         {
-            // throw no exceptions with null args
-            IOUtility.WriteSecret(null, null);
             using (var ss = new SecureString())
             {
-                IOUtility.WriteSecret(null, ss);
-
                 // test with empty
                 StringBuilder sb = new StringBuilder();
                 using (StringWriter sw = new StringWriter(sb))
                 {
-                    IOUtility.WriteSecret(sw, ss);
+                    IOExtensions.WriteSecret(sw, ss);
                 }
                 Assert.IsTrue(sb.Length == 0, "Written string not empty.");
             }
@@ -39,7 +35,7 @@ namespace PgpSharp.IO
             using (StringWriter sw = new StringWriter(sb))
             using (SecureString ss = Util.MakeSecureString(text))
             {
-                IOUtility.WriteSecret(sw, ss);
+                IOExtensions.WriteSecret(sw, ss);
                 Assert.AreEqual(text, sb.ToString());
             }
         }
@@ -53,7 +49,7 @@ namespace PgpSharp.IO
             using (StringWriter sw = new StringWriter(sb))
             using (SecureString ss = Util.MakeSecureString(text))
             {
-                IOUtility.WriteSecret(sw, ss);
+                IOExtensions.WriteSecret(sw, ss);
                 Assert.AreEqual(text, sb.ToString());
             }
         }
@@ -65,8 +61,8 @@ namespace PgpSharp.IO
         [TestMethod]
         public void DecodeAsciiEscapes_Handles_Null()
         {
-            string input = null;
-            var output = IOUtility.DecodeAsciiEscapes(input);
+            string? input = null;
+            var output = IOExtensions.DecodeAsciiEscapes(input);
             Assert.AreEqual(input, output);
         }
 
@@ -74,7 +70,7 @@ namespace PgpSharp.IO
         public void DecodeAsciiEscapes_Handles_No_Escapes()
         {
             var input = "hello world!";
-            var output = IOUtility.DecodeAsciiEscapes(input);
+            var output = IOExtensions.DecodeAsciiEscapes(input);
             Assert.AreEqual(input, output);
         }
 
@@ -82,7 +78,7 @@ namespace PgpSharp.IO
         public void DecodeAsciiEscapes_Handles_One_Escapes()
         {
             var input = @"hello\x20world!";
-            var output = IOUtility.DecodeAsciiEscapes(input);
+            var output = IOExtensions.DecodeAsciiEscapes(input);
             Assert.AreEqual("hello world!", output);
         }
 
@@ -91,7 +87,7 @@ namespace PgpSharp.IO
         {
             // also use this test for begin and end
             var input = @"\x40hello\x20world!\x3a";
-            var output = IOUtility.DecodeAsciiEscapes(input);
+            var output = IOExtensions.DecodeAsciiEscapes(input);
             Assert.AreEqual("@hello world!:", output);
         }
 
@@ -99,7 +95,7 @@ namespace PgpSharp.IO
         public void DecodeAsciiEscapes_Handles_Ambiguous_Escapes()
         {
             var input = @"\x4010 cats say\x3aa lol cat.";
-            var output = IOUtility.DecodeAsciiEscapes(input);
+            var output = IOExtensions.DecodeAsciiEscapes(input);
             Assert.AreEqual("@10 cats say:a lol cat.", output);
         }
 
