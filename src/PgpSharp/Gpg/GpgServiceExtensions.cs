@@ -24,8 +24,10 @@ public static class GpgServiceExtensions
             configure?.Invoke(options);
             return options;
         });
+
+        services.AddKeyedSingleton<GpgTool>("test");
         services.AddSingleton<GpgTool>();
-        services.AddSingleton<IPgpTool>(svc=>svc.GetRequiredService<GpgTool>());
+        services.AddSingleton<IPgpTool>(svc => svc.GetRequiredService<GpgTool>());
         return services;
     }
 
@@ -39,7 +41,48 @@ public static class GpgServiceExtensions
     {
         services.AddSingleton(options);
         services.AddSingleton<GpgTool>();
-        services.AddSingleton<IPgpTool>(svc=>svc.GetRequiredService<GpgTool>());
+        services.AddSingleton<IPgpTool>(svc => svc.GetRequiredService<GpgTool>());
+        return services;
+    }
+
+
+    /// <summary>
+    /// Adds a keyed singleton <see cref="IPgpTool"/> to services using default configuration options with
+    /// customization opportunity.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="key"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddKeyedGpg(this IServiceCollection services, object key,
+        Action<GpgOptions>? configure = null)
+    {
+        services.AddKeyedSingleton<GpgOptions>(key, (svc, daKey) =>
+        {
+            var options = new GpgOptions();
+            configure?.Invoke(options);
+            return options;
+        });
+
+        services.AddKeyedSingleton<GpgTool>(key);
+        services.AddKeyedSingleton<IPgpTool>(key,
+            (svc, daKey) => svc.GetRequiredKeyedService<GpgTool>(daKey));
+        return services;
+    }
+
+    /// <summary>
+    /// Adds a keyed singleton <see cref="IPgpTool"/> to services using the specified configuration options.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="key"></param>
+    /// <param name="options"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddKeyedGpg(this IServiceCollection services, object key, GpgOptions options)
+    {
+        services.AddKeyedSingleton(key, options);
+        services.AddKeyedSingleton<GpgTool>(key);
+        services.AddKeyedSingleton<IPgpTool>(key,
+            (svc, daKey) => svc.GetRequiredKeyedService<GpgTool>(daKey));
         return services;
     }
 }
