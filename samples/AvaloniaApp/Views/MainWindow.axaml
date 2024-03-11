@@ -3,7 +3,7 @@
         xmlns:vm="using:AvaloniaApp.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" Width="800" Height="550"
         x:Class="AvaloniaApp.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -12,9 +12,105 @@
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto">
+        <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" ColumnDefinitions="Auto,*,Auto" Margin="8 8 8 0">
+            <Label VerticalAlignment="Center" HorizontalContentAlignment="Right" Target="BoxGpgPath" Width="160">Gpg Path</Label>
+            <TextBox Grid.Column="1" VerticalAlignment="Center" Name="BoxGpgPath" Text="{Binding GpgPath}"
+                     Margin="4 0">
+            </TextBox>
+            <Button Grid.Column="2" VerticalAlignment="Center" Command="{Binding ChooseGpgCommand}">Choose...</Button>
+        </Grid>
+        <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" ColumnDefinitions="Auto,*,Auto" Margin="8 8 8 0">
+            <Label VerticalAlignment="Center" HorizontalContentAlignment="Right" Target="BoxKeyringPath" Width="160">Custom Keyring Folder</Label>
+            <TextBox Grid.Column="1" VerticalAlignment="Center" Name="BoxKeyringPath" Text="{Binding KeyringPath}"
+                     Margin="4 0">
+            </TextBox>
+            <Button Grid.Column="2" VerticalAlignment="Center" Command="{Binding ChooseKeyFolderCommand}">
+                Choose...
+            </Button>
+        </Grid>
+        <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" ColumnDefinitions="Auto,*,Auto" Margin="8 8 8 0">
+            <Label VerticalAlignment="Center" HorizontalContentAlignment="Right" Target="BoxPassphrase" Width="160">Passphrase</Label>
+            <TextBox Grid.Column="1" VerticalAlignment="Center" Name="BoxPassphrase" Text="{Binding Passphrase}" PasswordChar="*"
+                     Margin="4 0">
+            </TextBox>
+        </Grid>
+
+        
+        <TextBlock Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Text="{Binding LastError}" Background="Moccasin"
+                   Margin="0 8 0 0" Padding="8" TextWrapping="Wrap"
+                   IsVisible="{Binding LastError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+        </TextBlock>
+        <TextBlock Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Text="{Binding LastSuccess}" Background="Honeydew"
+                   Margin="0 8 0 0" Padding="8" TextWrapping="Wrap"
+                   IsVisible="{Binding LastSuccess, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+        </TextBlock>
+
+        <DockPanel Grid.Row="5" Grid.Column="0" Margin="8 8 0 0">
+            <Label Target="ListboxPubKeys" DockPanel.Dock="Top">Available Public Keys</Label>
+            <ListBox Name="ListboxPubKeys" CornerRadius="4"
+                     ItemsSource="{Binding PublicKeys}"
+                     SelectedItem="{Binding SelectedPublicKey}">
+            </ListBox>
+        </DockPanel>
+
+        <DockPanel Grid.Row="5" Grid.Column="1" Margin="8 8 0 0">
+            <Label Target="ListboxPriKeys" DockPanel.Dock="Top">Available Private Keys</Label>
+            <ListBox Name="ListboxPriKeys" CornerRadius="4"
+                     ItemsSource="{Binding PrivateKeys}"
+                     SelectedItem="{Binding SelectedPrivateKey}">
+            </ListBox>
+        </DockPanel>
+
+        <Border Grid.Row="6" Grid.Column="0" BorderThickness="1" BorderBrush="LightGray" Margin="8 8 0 8" Padding="8"
+                CornerRadius="4">
+            <StackPanel>
+                <CheckBox IsChecked="{Binding Encrypt}">Encrypt</CheckBox>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding Sign}">Sign</CheckBox>
+                    <CheckBox IsChecked="{Binding ClearSign}" Margin="16 0">Clear Sign</CheckBox>
+                </StackPanel>
+
+                <Grid ColumnDefinitions="Auto,*" Margin="8 8 8 0">
+                    <Label VerticalAlignment="Center" HorizontalContentAlignment="Right" Target="BoxClearFile">Data File</Label>
+                    <TextBox Grid.Column="1" VerticalAlignment="Center" Name="BoxClearFile"
+                             Text="{Binding ClearDataFilePath}"
+                             Margin="4 0 0 0">
+                    </TextBox>
+                </Grid>
+                <Button HorizontalAlignment="Right" Command="{Binding ChooseClearFileCommand}"
+                        Margin="8">
+                    Choose...
+                </Button>
+
+                <Button Command="{Binding EncryptSignCommand}">Encrypt and/or Sign</Button>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="6" Grid.Column="1" BorderThickness="1" BorderBrush="LightGray" Margin="8 8 0 8" Padding="8"
+                CornerRadius="4">
+            <StackPanel>
+                <CheckBox IsChecked="{Binding Decrypt}">Decrypt</CheckBox>
+                <CheckBox IsChecked="{Binding Verify}">Verify</CheckBox>
+
+                <Grid ColumnDefinitions="Auto,*" Margin="8 8 8 0">
+                    <Label VerticalAlignment="Center" HorizontalContentAlignment="Right" Target="BoxCipherFile">Data File</Label>
+                    <TextBox Grid.Column="1" VerticalAlignment="Center" Name="BoxCipherFile"
+                             Text="{Binding CipherDataFilePath}"
+                             Margin="4 0 0 0">
+                    </TextBox>
+                </Grid>
+                <Button HorizontalAlignment="Right" Command="{Binding ChooseCipherFileCommand}" Margin="8">
+                    Choose...
+                </Button>
+
+                <Button Command="{Binding DecryptVerifyCommand}">Decrypt and/or Verify</Button>
+            </StackPanel>
+        </Border>
+    </Grid>
+    <!-- <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/> -->
 
 </Window>

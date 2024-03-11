@@ -6,6 +6,7 @@
 *.user
 *.sln.docstates
 .idea/
+.DS_Store
 
 # Build results
 [Dd]ebug/

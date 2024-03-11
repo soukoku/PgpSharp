@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using AvaloniaApp.ViewModels;
 using AvaloniaApp.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,24 +20,17 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        var collection = new ServiceCollection();
-        collection.AddGpg();
-        collection.AddSingleton<MainWindowViewModel>();
-
-        var services = collection.BuildServiceProvider();
-        var vm = services.GetRequiredService<MainWindowViewModel>();
-
-        foreach (var type in Enum.GetValues<Environment.SpecialFolder>())
-        {
-            System.Diagnostics.Debug.WriteLine($"{type}={Environment.GetFolderPath(type)}");
-        }
-
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = vm
-            };
+            desktop.MainWindow = new MainWindow();
+            var collection = new ServiceCollection();
+            collection.AddGpg();
+            collection.AddSingleton<MainWindowViewModel>();
+            collection.AddSingleton<IStorageProvider>(svc => desktop.MainWindow.StorageProvider);
+
+            var services = collection.BuildServiceProvider();
+            var vm = services.GetRequiredService<MainWindowViewModel>();
+            desktop.MainWindow.DataContext = vm;
         }
 
         base.OnFrameworkInitializationCompleted();
