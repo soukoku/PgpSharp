@@ -46,6 +46,7 @@ public class GpgOptions
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Gnu\\GnuPG"),
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "GnuPG\\bin"),
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Gnu\\GnuPG"),
+            "/usr/bin/",
             "/opt/homebrew/bin/"
         };
         var names = new[] { "gpg2.exe", "gpg.exe", "gpg" };
