@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PgpSharp.UnitTests", "Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaApp", "samples\AvaloniaApp\AvaloniaApp.csproj", "{569EFCB5-223A-4424-8D98-8CDC58D934E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PgpSharp.BouncyCastle", "src\PgpSharp.BouncyCastle\PgpSharp.BouncyCastle.csproj", "{DD614362-8CFC-45FC-A066-9C05D84187F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{569EFCB5-223A-4424-8D98-8CDC58D934E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{569EFCB5-223A-4424-8D98-8CDC58D934E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{569EFCB5-223A-4424-8D98-8CDC58D934E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD614362-8CFC-45FC-A066-9C05D84187F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD614362-8CFC-45FC-A066-9C05D84187F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD614362-8CFC-45FC-A066-9C05D84187F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD614362-8CFC-45FC-A066-9C05D84187F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
