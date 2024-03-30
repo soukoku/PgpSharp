@@ -96,7 +96,7 @@ public class GpgTool : IPgpTool
 
         input.CheckRequirements();
         Options.Validate();
-        
+
         using (var proc = new RedirectedProcess(Options.GpgPath!, CreateDataCommandLineArgs(input)))
         {
             if (proc.Start())
@@ -157,8 +157,17 @@ public class GpgTool : IPgpTool
                 args.Append("--clearsign ");
             }
         }
+        else if (input.Operation.HasFlag(DataOperation.Sign))
+        {
+            args.Append("--sign ");
+        }
+        else if (input.Operation.HasFlag(DataOperation.ClearSign))
+        {
+            args.Append("--clearsign ");
+        }
         else if (input.Operation.HasFlag(DataOperation.Decrypt))
         {
+            // decrypt can implicitly verify
             args.Append("--decrypt ");
         }
         else if (input.Operation.HasFlag(DataOperation.Verify))
@@ -207,7 +216,7 @@ public class GpgTool : IPgpTool
     public IEnumerable<KeyId> ListKeys(KeyTarget target)
     {
         Options.Validate();
-        
+
         var args = "--fixed-list-mode --with-colons --with-fingerprint --list-public-keys";
         var keyHead = "pub";
         if (target == KeyTarget.Secret)

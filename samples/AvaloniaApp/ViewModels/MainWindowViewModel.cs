@@ -17,14 +17,6 @@ public partial class MainWindowViewModel : ObservableObject
     private readonly GpgTool _pgpTool;
     private readonly IStorageProvider? _storageProvider;
 
-    public MainWindowViewModel()
-    {
-        _pgpTool = new GpgTool(new GpgOptions());
-        ReloadKeys();
-        LastError = "Design time sample error";
-        LastSuccess = "Design time sample success";
-    }
-
     public MainWindowViewModel(GpgTool pgpTool, IStorageProvider storageProvider)
     {
         _pgpTool = pgpTool;
@@ -96,7 +88,7 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(DecryptVerifyCommand))]
     private string? _cipherDataFilePath;
 
-    private void ReloadKeys()
+    protected void ReloadKeys()
     {
         try
         {
@@ -232,7 +224,7 @@ public partial class MainWindowViewModel : ObservableObject
         if (ClearSign) operation |= DataOperation.ClearSign;
 
         using var pass = MakeSecureString(Passphrase);
-        var encryptArg = new FileDataInput
+        var inputArg = new FileDataInput
         {
             Armor = true,
             AlwaysTrustPublicKey = AlwaysTrustKey,
@@ -247,7 +239,7 @@ public partial class MainWindowViewModel : ObservableObject
         {
             LastError = null;
             LastSuccess = null;
-            _pgpTool.ProcessData(encryptArg);
+            _pgpTool.ProcessData(inputArg);
             LastSuccess = $"Produced file {outFile}";
             // SelectFileInExplorer(outFile);
         }
@@ -268,11 +260,16 @@ public partial class MainWindowViewModel : ObservableObject
     private void DecryptVerify()
     {
         var srcFile = CipherDataFilePath;
+        using var pass = MakeSecureString(Passphrase);
 
-        var name = Path.GetFileName(srcFile).Replace(".cipher.txt", "");
-        var outFile = Path.Combine(System.IO.Path.GetDirectoryName(srcFile),
-            System.IO.Path.GetFileNameWithoutExtension(name) + ".cleared" +
-            System.IO.Path.GetExtension(name));
+        var inputArg = new FileDataInput
+        {
+            AlwaysTrustPublicKey = AlwaysTrustKey,
+            InputFile = srcFile,
+            Recipient = SelectedPrivateKey?.Id,
+            Originator = SelectedPublicKey?.Id,
+            Passphrase = pass
+        };
 
         // if (File.Exists(outFile))
         // {
@@ -282,27 +279,32 @@ public partial class MainWindowViewModel : ObservableObject
         //         return;
         //     }
         // }
-        DataOperation operation = DataOperation.Invalid;
-        if (Decrypt) operation |= DataOperation.Decrypt;
-        if (Verify) operation |= DataOperation.Verify;
-
-        using var pass = MakeSecureString(Passphrase);
-        var decryptArg = new FileDataInput
+        if (Decrypt)
         {
-            AlwaysTrustPublicKey = AlwaysTrustKey,
-            InputFile = srcFile,
-            OutputFile = outFile,
-            Operation = operation,
-            Recipient = SelectedPrivateKey?.Id,
-            Originator = SelectedPublicKey?.Id,
-            Passphrase = pass
-        };
+            inputArg.Operation |= DataOperation.Decrypt;
+
+            var name = Path.GetFileName(srcFile).Replace(".cipher.txt", "");
+            inputArg.OutputFile = Path.Combine(System.IO.Path.GetDirectoryName(srcFile),
+                System.IO.Path.GetFileNameWithoutExtension(name) + ".cleared" +
+                System.IO.Path.GetExtension(name));
+        }
+
+        if (Verify) inputArg.Operation |= DataOperation.Verify;
+
         try
         {
             LastError = null;
             LastSuccess = null;
-            _pgpTool.ProcessData(decryptArg);
-            LastSuccess = $"Produced file {outFile}";
+            _pgpTool.ProcessData(inputArg);
+
+            if (inputArg.Operation.HasFlag(DataOperation.Decrypt))
+            {
+                LastSuccess = $"Produced file {inputArg.OutputFile}";
+            }
+            else
+            {
+                LastSuccess = $"Verified file {inputArg.InputFile}";
+            }
             // SelectFileInExplorer(outFile);
         }
         catch (Exception ex)
@@ -320,5 +322,15 @@ public partial class MainWindowViewModel : ObservableObject
         }
 
         return ss;
+    }
+}
+
+public class DesignMainWindowViewModel : MainWindowViewModel
+{
+    public DesignMainWindowViewModel() : base(new GpgTool(new GpgOptions()), null)
+    {
+        ReloadKeys();
+        LastError = "Design time sample error";
+        LastSuccess = "Design time sample success";
     }
 }
