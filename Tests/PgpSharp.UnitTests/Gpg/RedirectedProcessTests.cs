@@ -1,7 +1,7 @@
 ﻿//using System;
 //using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-//namespace PgpSharp.GnuPG
+//namespace PgpSharp.Gpg
 //{
 //    [TestClass]
 //    public class RedirectedProcessTests

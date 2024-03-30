@@ -5,21 +5,20 @@ using System.Linq;
 using System.Security;
 using System.Text;
 
-namespace PgpSharp
+namespace PgpSharp;
+
+/// <summary>
+/// Contains small methods for setting up tests.
+/// </summary>
+static class Util
 {
-    /// <summary>
-    /// Contains small methods for setting up tests.
-    /// </summary>
-    static class Util
+    public static SecureString MakeSecureString(string text)
     {
-        public static SecureString MakeSecureString(string text)
+        SecureString ss = new SecureString();
+        foreach (char c in text)
         {
-            SecureString ss = new SecureString();
-            foreach (char c in text)
-            {
-                ss.AppendChar(c);
-            }
-            return ss;
+            ss.AppendChar(c);
         }
+        return ss;
     }
 }

@@ -7,17 +7,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{1B5070
 	ProjectSection(SolutionItems) = preProject
 		LICENSE.txt = LICENSE.txt
 		Readme.md = Readme.md
+		src\Directory.Build.props = src\Directory.Build.props
+		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A63C854C-085B-4B0E-B4CD-BEE6195ABDCC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{40F6E502-D9F5-4682-B1F7-902CE93F7499}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.PgpSharp", "samples\Sample.PgpSharp\Sample.PgpSharp.csproj", "{32C34C61-7870-4069-B95B-BCD08EC19D27}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PgpSharp", "src\PgpSharp\PgpSharp.csproj", "{9A3D8D31-98C7-40A9-AEDB-C42E98624CA6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PgpSharp.UnitTests", "Tests\PgpSharp.UnitTests\PgpSharp.UnitTests.csproj", "{6D5256F3-5B8A-4187-9E58-A0FF4845539D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaApp", "samples\AvaloniaApp\AvaloniaApp.csproj", "{569EFCB5-223A-4424-8D98-8CDC58D934E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PgpSharp.BouncyCastle", "src\PgpSharp.BouncyCastle\PgpSharp.BouncyCastle.csproj", "{DD614362-8CFC-45FC-A066-9C05D84187F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +29,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{32C34C61-7870-4069-B95B-BCD08EC19D27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{32C34C61-7870-4069-B95B-BCD08EC19D27}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{32C34C61-7870-4069-B95B-BCD08EC19D27}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{32C34C61-7870-4069-B95B-BCD08EC19D27}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9A3D8D31-98C7-40A9-AEDB-C42E98624CA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9A3D8D31-98C7-40A9-AEDB-C42E98624CA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A3D8D31-98C7-40A9-AEDB-C42E98624CA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -37,13 +37,21 @@ Global
 		{6D5256F3-5B8A-4187-9E58-A0FF4845539D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D5256F3-5B8A-4187-9E58-A0FF4845539D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D5256F3-5B8A-4187-9E58-A0FF4845539D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{569EFCB5-223A-4424-8D98-8CDC58D934E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{569EFCB5-223A-4424-8D98-8CDC58D934E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{569EFCB5-223A-4424-8D98-8CDC58D934E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{569EFCB5-223A-4424-8D98-8CDC58D934E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD614362-8CFC-45FC-A066-9C05D84187F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD614362-8CFC-45FC-A066-9C05D84187F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD614362-8CFC-45FC-A066-9C05D84187F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD614362-8CFC-45FC-A066-9C05D84187F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{32C34C61-7870-4069-B95B-BCD08EC19D27} = {40F6E502-D9F5-4682-B1F7-902CE93F7499}
 		{6D5256F3-5B8A-4187-9E58-A0FF4845539D} = {A63C854C-085B-4B0E-B4CD-BEE6195ABDCC}
+		{569EFCB5-223A-4424-8D98-8CDC58D934E9} = {40F6E502-D9F5-4682-B1F7-902CE93F7499}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7CDFA162-2DC3-4D94-AB9A-7397333630B3}

@@ -13,18 +13,18 @@ Install-Package PgpSharp
 
 # Using the lib
 The main interface to use is IPgpTool. The lib provides a default
-impelementation that merely wraps around the [GnuPG](https://gnupg.org/) 
-binary for windows and can be instantiated like this:
+implementation that wraps around the [GnuPG2](https://gnupg.org/) 
+binary and can be instantiated like this:
 
 ```cs
-IPgpTool tool = new GnuPGTool();
+IPgpTool tool = new GnuPGTool(new GpgOptions());
 ```
 
-By default the GnuPGTool will try to find the GnuPG binary in the standard install
+By default the `GpgOptions` will try to find the GnuPG binary in the standard install
 folder. To override the binary file path set this property:
 
 ```cs
-GnuPGConfig.GnuPGExePath = @"your\path\to\gpg2.exe";
+new GpgOptions { GpgPath = @"your\path\to\gpg" };
 ```
 
 To encrypt/sign/decrypt data, you would use the ProcessData() method
@@ -57,5 +57,4 @@ tool.ProcessData(decryptArg);
 ```
 
 Details on which properties to use for different sign/encrypt/decrypt operation 
-is available in the intellisense of that property. The sample WPF project also allows
-you to play with the different operations.
+is available in the intellisense of that property.
